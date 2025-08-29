@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Kecamatan;
 use App\Models\Laporan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class LaporanController extends Controller
@@ -17,7 +19,66 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        //
+        $laporans = Laporan::with(['category', 'user', 'kecamatan'])
+            ->select('id', 'judul_laporan', 'slug', 'category_id', 'kecamatan_id', 'lokasi_asli', 'deskripsi', 'tanggal_kejadian', 'waktu_kejadian', 'image', 'status', 'created_at', 'user_id')
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get()
+            ->map(fn($l) => ([
+                'id' => $l->id,
+                'slug' => $l->slug,
+                'title' => $l->judul_laporan,
+                'location' => $l->lokasi_asli,
+                'date' => $l->tanggal_kejadian?->format('d M Y'),
+                'time' => $l->waktu_kejadian?->format('H:i'),
+                'image' => $l->image ? Storage::url('laporan_images/' . $l->image) : '/images/placeholder.jpg',
+                'status' => $this->formatStatus($l->status),
+                'category' => $l->category->name ?? '-',
+                'author' => $l->user->name ?? 'Anonim',
+                'description' => Str::limit($l->deskripsi, 120),
+                'created_at' => $l->created_at,
+            ]));
+
+        //calculat
+        $totalLaporan = Laporan::count();
+        $totalWarga = User::where('role', 'user')->count();
+        $totalProses = Laporan::where('status', 'proses')->count();
+        $totalSelesai = Laporan::where('status', 'selesai')->count();
+
+        if ($totalLaporan > 0) {
+            if ($totalProses > 0 && $totalSelesai == 0) {
+                $persenSelesai = 25;
+            } elseif ($totalSelesai > 0) {
+                $persenSelesai = round(($totalSelesai / $totalLaporan) * 100, 2);
+            } else {
+                $persenSelesai = 0;
+            }
+        } else {
+            $persenSelesai = 0;
+        }
+
+        return Inertia::render('user/home/LandingPage', [
+            'laporans' => $laporans,
+            'stats' => [
+                'laporan' => $totalLaporan,
+                'warga' => $totalWarga,
+                'selesai' => $persenSelesai
+            ]
+        ]);
+    }
+
+    private function formatStatus($status)
+    {
+        switch ($status) {
+            case 'belum_diproses':
+                return 'Belum Diproses';
+            case 'proses':
+                return 'Diproses';
+            case 'selesai':
+                return 'Selesai';
+            default:
+                return $status;
+        }
     }
 
     /**
@@ -25,14 +86,15 @@ class LaporanController extends Controller
      */
     public function create()
     {
-        $categories = Category::select('id','name')->get();
+        $categories = Category::select('id', 'name')->get();
         $kecamatans = Kecamatan::select('id', 'name')->get();
 
-        return Inertia::render('user/home/FormLaporan', [
+        return Inertia::render('user/laporan/FormLaporan', [
             'categories' => $categories,
             'kecamatans' => $kecamatans
         ])
-;    }
+        ;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -57,7 +119,7 @@ class LaporanController extends Controller
             $validated['user_id'] = null;
         }
 
-        if ($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = $file->hashName();
             $file->storeAs('laporan_images', $filename, 'public');
@@ -66,7 +128,7 @@ class LaporanController extends Controller
 
         Laporan::create($validated);
 
-        return redirect()->back()->with('success','Laporan Berhasil Dikirim!');
+        return redirect()->back()->with('success', 'Laporan Berhasil Dikirim!');
     }
 
     /**
@@ -99,12 +161,12 @@ class LaporanController extends Controller
     public function destroy(Laporan $laporan)
     {
         //
-        if($laporan->image && Storage::disk('public')->exists('laporan_images/' . $laporan->image)) {
+        if ($laporan->image && Storage::disk('public')->exists('laporan_images/' . $laporan->image)) {
             Storage::disk('public')->delete('laporan_images/' . $laporan->image);
         }
 
         $laporan->delete();
 
-        return redirect()->back()->with('success','Laporan Berhasil Dihapus!');
+        return redirect()->back()->with('success', 'Laporan Berhasil Dihapus!');
     }
 }

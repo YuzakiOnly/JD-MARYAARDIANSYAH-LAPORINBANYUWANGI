@@ -1,11 +1,20 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('user/home/LandingPage');
+Route::fallback(fn() => Inertia::render('error/NotFound'))
+->name("error.page");
+
+Route::controller(LaporanController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
+});
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/laporin', [LaporanController::class, 'create'])->name('laporin ');
+    Route::post('/laporin', [LaporanController::class, 'store'])->name('laporin.store');
 });
 
 // Auth (guest only)
@@ -34,7 +43,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/auth-google-redirect', [AuthController::class, 'google_redirect']);
     Route::get('/auth-google-callback', [AuthController::class, 'google_callback']);
 });
-
 
 // logout 
 Route::middleware('auth')->group(function () {

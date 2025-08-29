@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
 import { MdOutlineAccountCircle, MdLogout } from "react-icons/md";
 import {
     DropdownMenu,
@@ -15,6 +16,7 @@ import AvatarDisplay from '@/components/AvatarDisplay';
 export const Navbar = () => {
     const { url, props } = usePage();
     const user = props?.auth?.user || null;
+
     const logout = () => Inertia.post('/logout');
 
     const menuItems = [
@@ -25,7 +27,7 @@ export const Navbar = () => {
 
     return (
         <>
-            <div className="sticky top-0 z-40 w-full bg-white shadow transition-all duration-300">
+            <div className="sticky top-0 z-40 w-full bg-white/50 backdrop-blur-md shadow-sm transition-all duration-300">
                 <div className="max-w-screen-xl mx-auto p-4 flex items-center justify-between">
                     <Link href="/" className="flex items-center tracking-tight font-jetbrains hover:opacity-80 transition-opacity">
                         <h1 className="text-3xl font-bold">Laporin!</h1>
@@ -38,7 +40,7 @@ export const Navbar = () => {
                                 <li key={item.label}>
                                     <Link
                                         href={item.link}
-                                        className={`py-2 px-3 transition-colors cursor-pointer text-gray-900 font-semibold hover:text-blue-500`}>
+                                        className={`py-2 px-3 transition-all duration-300 cursor-pointer text-gray-900 font-semibold hover:text-blue-500 hover:scale-105`}>
                                         {item.label}
                                     </Link>
                                 </li>
@@ -49,13 +51,13 @@ export const Navbar = () => {
                     <div className="hidden md:flex items-center gap-4">
                         {user && (
                             <Link
-                                href="/laporin"
+                                href={url === '/laporin' ? '#' : '/laporin'}
+                                aria-disabled={url === 'laporin'}
                                 className={`px-4 py-2.5 font-medium text-sm text-white rounded-full transition-colors shadow-sm hover:shadow-md ${
                                     url === '/laporin'
-                                        ? 'bg-gray-500 cursor-default'
-                                        : 'bg-blue-500 hover:bg-blue-600'
-                                }`}
-                            >
+                                        ? 'bg-gray-500 cursor-not-allowed pointer-events-none'
+                                        : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600'
+                                }`}>
                                 {url === '/laporin' ? 'Sedang Membuat Laporan' : 'Laporkan Sekarang'}
                             </Link>
                         )}

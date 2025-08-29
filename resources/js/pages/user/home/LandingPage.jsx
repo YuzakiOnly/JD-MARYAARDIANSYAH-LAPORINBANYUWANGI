@@ -1,14 +1,13 @@
 import { HeroPattern } from '@/components/HeroPattern'
-import { Header } from '@/components/user/Header'
+import Header from '@/components/user/Header'
 import { MainLayout } from '@/pages/layouts/MainLayout'
-import React from 'react'
 
-const LandingPage = () => {
+const LandingPage = ({stats}) => {
   return (
     <>
       <HeroPattern>
         <main className='font-outfit'>
-          <Header/>
+          <Header stats={stats}/>
         </main>
       </HeroPattern>
     </>
