@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Laporan extends Model
@@ -26,6 +27,15 @@ class Laporan extends Model
         "tanggal_kejadian" => "date",
         "waktu_kejadian"   => "datetime:H:i"
     ];
+
+    protected static function booted()
+    {
+        static::deleting(function (self $laporan) {
+            if ($laporan->image) {
+                Storage::disk('public')->delete('laporan_images/' . $laporan->image);
+            }
+        });
+    }
 
     public function category()
     {

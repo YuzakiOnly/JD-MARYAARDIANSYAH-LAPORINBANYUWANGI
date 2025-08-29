@@ -136,7 +136,12 @@ class LaporanController extends Controller
      */
     public function show(Laporan $laporan)
     {
-        //
+        return Inertia::render('user/laporan/DetailBerita');
+    }
+
+    public function BeritaLaporan(Request $request)
+    {
+        return Inertia::render('user/laporan/BeritaLaporan');
     }
 
     /**

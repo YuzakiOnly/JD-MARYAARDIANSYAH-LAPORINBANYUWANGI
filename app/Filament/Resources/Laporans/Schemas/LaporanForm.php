@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Laporans\Schemas;
 use App\Models\Category;
 use App\Models\Kecamatan;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -12,6 +13,8 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Schemas\Schema;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class LaporanForm
@@ -21,33 +24,36 @@ class LaporanForm
         return $schema
             ->components([
                 TextInput::make('judul_laporan')
-                    ->placeholder(('Jalan Berlubang Di Jl Ahmad Yani'))
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set) =>
-                        $set('slug', Str::slug($state))
-                    ),
-                    
+                    ->placeholder(('Contoh: Jalan Berlubang di Jl. Ahmad Yani'))
+                    ->required(),
+
                 Hidden::make('slug')
-                    ->disabled() 
+                    ->disabled()
                     ->dehydrated(false),
 
                 TextInput::make('no_telpon')
-                    ->tel()
+                    ->label('Nomor Telepon')
+                    ->placeholder('08xxxxxxxxxx')
                     ->required()
-                    ->maxLength(15),
-                    
+                    ->maxLength(15)
+                    ->extraInputAttributes([
+                        'inputmode' => 'numeric',       
+                        'pattern' => '[0-9]*',          
+                        'onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57',
+                    ])
+                    ->rules(['regex:/^[0-9]+$/', 'min:10', 'max:15']),
+
                 Select::make('category_id')
                     ->label('Select Category')
                     ->placeholder('Select an Category')
-                    ->options(Category::pluck('name','id'))
+                    ->options(Category::pluck('name', 'id'))
                     ->required()
                     ->searchable(),
 
                 Select::make('kecamatan_id')
                     ->label('Select Kecamatan')
                     ->placeholder('Select an Kecamatan')
-                    ->options(Kecamatan::pluck('name','id'))
+                    ->options(Kecamatan::pluck('name', 'id'))
                     ->required()
                     ->searchable(),
 
@@ -55,27 +61,59 @@ class LaporanForm
                     ->default(auth()->id()),
 
                 TextInput::make('lokasi_asli')
+                    ->placeholder('Contoh: Depan Toko Makmur, Jl. Ahmad Yani')
                     ->required(),
+
+                Select::make('status')
+                    ->label('Select Status')
+                    ->placeholder('Select an Status')
+                    ->options(['belum_diproses' => 'Belum diproses', 'proses' => 'Proses', 'selesai' => 'Selesai'])
+                    ->default('belum_diproses')
+                    ->required()
+                    ->searchable(),
 
                 Textarea::make('deskripsi')
                     ->required()
+                    ->required()
+                    ->minLength(10)
                     ->columnSpanFull(),
 
                 DatePicker::make('tanggal_kejadian')
+                    ->label('Tanggal Kejadian')
                     ->required(),
 
                 TimePicker::make('waktu_kejadian')
+                    ->label('Waktu Kejadian')
+                    ->seconds(false)
+                    ->displayFormat('H:i')
+                    ->timezone('Asia/Jakarta')
                     ->required(),
 
                 FileUpload::make('image')
                     ->image()
                     ->directory('laporan_images')
-                    ->maxFiles(10240),
+                    ->disk('public')
+                    ->visibility('public')
+                    ->getUploadedFileNameForStorageUsing(fn($file) => $file->hashName())
+                    ->saveUploadedFileUsing(function (UploadedFile $file, $record) {
+                        $old = $record?->image;
+                        $path = $file->store('laporan_images', 'public');
+                        $new = basename($path);
+                        if ($old && $old !== $new) {
+                            Storage::disk('public')->delete('laporan_images/' . $old);
+                        }
+                        return $new;
+                    })
 
-                Select::make('status')
-                    ->options(['belum_diproses' => 'Belum diproses', 'proses' => 'Proses', 'selesai' => 'Selesai'])
-                    ->default('belum_diproses')
-                    ->required(),
+                    ->required(fn($livewire) => $livewire instanceof CreateRecord)
+
+                    ->afterStateHydrated(function ($component, $state) {
+                        if ($state) {
+                            $component->state('laporan_images/' . $state);
+                        }
+                    })
+                    ->maxSize(10240)
+                    ->columnSpanFull(),
             ]);
     }
 }

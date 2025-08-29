@@ -26,16 +26,18 @@ class LaporansTable
                 TextColumn::make('no_telpon')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: false),
-                TextColumn::make('category_id')
-                    ->numeric()
+                TextColumn::make('category.name')
+                    ->label('Category')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),
-                TextColumn::make('kecamatan_id')
-                    ->numeric()
+
+                TextColumn::make('kecamatan.name')
+                    ->label('Kecamatan')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),
-                TextColumn::make('user_id')
-                    ->numeric()
+
+                TextColumn::make('user.name')
+                    ->label('User')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('lokasi_asli')
@@ -50,7 +52,10 @@ class LaporansTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 ImageColumn::make('image')
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->disk('public')
+                    ->getStateUsing(fn($record) => $record->image
+                        ? 'laporan_images/' . $record->image
+                        : null),
                 SelectColumn::make('status')
                     ->options([
                         'belum_diproses' => 'Belum diproses',
@@ -77,9 +82,7 @@ class LaporansTable
                 EditAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+                DeleteBulkAction::make(),
             ]);
     }
 }

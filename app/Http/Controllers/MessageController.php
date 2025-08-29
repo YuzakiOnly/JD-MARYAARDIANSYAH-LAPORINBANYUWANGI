@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kecamatan;
 use App\Models\Message;
+use Auth;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -12,7 +14,10 @@ class MessageController extends Controller
      */
     public function index()
     {
-        //
+        $kecamatans = Kecamatan::select('id', 'name')->orderBy('name')->get();
+        return inertia('user/contact/ContactUs', [
+            'kecamatans' => $kecamatans
+        ]);
     }
 
     /**
@@ -20,7 +25,7 @@ class MessageController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -28,7 +33,24 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_lengkap'  => 'required|string|max:255',
+            'kecamatan_id'  => 'required|exists:kecamatans,id',
+            'no_telpon'     => 'required|string|max:15',
+            'alamat_email'  => 'required|email|max:255',
+            'deskripsi'     => 'required|string|min:10',
+        ]);
+
+        Message::create([
+            'nama_lengkap' => $request->nama_lengkap,
+            'kecamatan_id' => $request->kecamatan_id,
+            'user_id' => Auth::id(),
+            'no_telpon'    => $request->no_telpon,
+            'alamat_email' => $request->alamat_email,
+            'deskripsi'    => $request->deskripsi,
+        ]);
+
+        return back()->with('success', 'Pesan berhasil dikirim!');
     }
 
     /**
