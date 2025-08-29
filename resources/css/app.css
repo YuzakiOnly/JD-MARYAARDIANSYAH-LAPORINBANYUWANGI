@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap');
+
 @import 'tailwindcss';
 @import "tw-animate-css";
 
@@ -128,3 +130,60 @@
     @apply bg-background text-foreground;
     }
 }
+
+.font-outfit{
+    font-family: 'Outfit', sans-serif;
+}
+
+.font-jetbrains{
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.text-navy {
+    color: #2D3E50;
+}
+
+/* Warna utama - Purple1 */
+.text-purple1 {
+    color: #645CBB;
+}
+.bg-purple1 {
+    background-color: #645CBB;
+}
+.border-purple1 {
+    border-color: #645CBB;
+}
+
+/* Warna sekunder - Purple2 */
+.text-purple2 {
+    color: #A084DC;
+}
+.bg-purple2 {
+    background-color: #A084DC;
+}
+.border-purple2 {
+    border-color: #A084DC;
+}
+
+/* Warna ketiga - Purple3 */
+.text-purple3 {
+    color: #BFACE2;
+}
+.bg-purple3 {
+    background-color: #BFACE2;
+}
+.border-purple3 {
+    border-color: #BFACE2;
+}
+
+/* Warna aksen - Pink */
+.text-pink1 {
+    color: #EBC7E6;
+}
+.bg-pink1 {
+    background-color: #EBC7E6;
+}
+.border-pink1 {
+    border-color: #EBC7E6;
+}
+
