@@ -60,10 +60,10 @@ class LaporanController extends Controller
         }
 
         $testimonials = Message::with('kecamatan')
-            ->latest()
-            ->limit(3)
+            ->whereIn('id', [1, 2, 3])   // ambil id 1-3
             ->get()
             ->map(fn($msg) => [
+                'id' => $msg->id,
                 'name' => $msg->nama_lengkap,
                 'role' => 'Warga ' . $msg->kecamatan->name,
                 'feedback' => $msg->deskripsi,
