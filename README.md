@@ -205,3 +205,12 @@ JD_021-MARYAARDIANSYAH-LAPORINBANYUWANGI/
 ├── vite.config.js            # Konfigurasi Vite untuk React
 └── README.md                 # Dokumentasi proyek
 ```
+
+---
+
+## 👨‍💻 Author
+
+Project ini dibuat oleh:  
+
+**M.ARYA ARDIANSYAH**  
+🔗 [GitHub - YuzakiOnly](https://github.com/YuzakiOnly)
