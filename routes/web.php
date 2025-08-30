@@ -12,7 +12,7 @@ Route::fallback(fn() => Inertia::render('error/NotFound'))
 Route::controller(LaporanController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     Route::get('/berita-laporan', 'beritaLaporan')->name('berita-laporan');
-    Route::get('/laporan/p', 'show')->name('laporan.show');
+    Route::get('/laporan/{slug}', 'show')->name('laporan.show');
 });
 
 Route::controller(MessageController::class)->group(function () {

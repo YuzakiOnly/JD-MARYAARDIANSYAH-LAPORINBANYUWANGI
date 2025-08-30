@@ -61,7 +61,6 @@ const NewsLaporin = ({ laporans = [] }) => {
 
     return (
         <div className="max-w-screen-xl mx-auto my-14 px-4">
-            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
@@ -93,9 +92,7 @@ const NewsLaporin = ({ laporans = [] }) => {
                 </motion.div>
             </div>
 
-            {/* News Grid - Equal Height Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
-                {/* Main News */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -135,7 +132,7 @@ const NewsLaporin = ({ laporans = [] }) => {
                                 {mainNews.title}
                             </h2>
 
-                            <p className="text-sm text-slate-600 line-clamp-3 flex items-start gap-1.5 flex-1">
+                            <p className="text-sm text-slate-600 line-clamp-3 flex items-center gap-1.5 flex-1">
                                 <AlertCircle size={14} className="mt-0.5 flex-shrink-0 text-emerald-500" />
                                 <span className="flex-1">{mainNews.description}</span>
                             </p>
@@ -154,21 +151,18 @@ const NewsLaporin = ({ laporans = [] }) => {
                     </Link>
                 </motion.div>
 
-                {/* Side News - Equal Height Container */}
-                <div className="h-full flex flex-col gap-4 lg:gap-6">
+                <div className="flex flex-col gap-4 lg:gap-6">
                     {sideNews.map((item, index) => (
                         <motion.div
                             key={item.id}
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: index * 0.1 }}
-                            viewport={{ once: true, amount: 0.2 }}
-                            className="flex-1 min-h-0">
+                            viewport={{ once: true, amount: 0.2 }}>
                             <Link
                                 href={`/laporan/${item.slug}`}
                                 className="relative flex  rounded-xl overflow-hidden shadow hover:shadow-md transition bg-white group">
 
-                                {/* Image Container */}
                                 <div className="flex-shrink-0 w-24 sm:w-28 lg:w-32">
                                     <img
                                         src={item.image || "/images/placeholder.jpg"}
@@ -177,7 +171,6 @@ const NewsLaporin = ({ laporans = [] }) => {
                                     />
                                 </div>
 
-                                {/* Content Container */}
                                 <div className="flex-1 p-3 lg:p-4 pr-10 lg:pr-12 flex flex-col justify-between min-w-0">
                                     <div className="space-y-2">
                                         <div className="flex items-center text-xs text-slate-500 gap-1">
@@ -224,7 +217,6 @@ const NewsLaporin = ({ laporans = [] }) => {
                                     </div>
                                 </div>
 
-                                {/* Arrow Icon */}
                                 <FaArrowRight className="absolute top-1/2 -translate-y-1/2 right-3 lg:right-4 text-slate-400 group-hover:text-blue-500 transition-colors duration-200" />
                             </Link>
                         </motion.div>

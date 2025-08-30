@@ -29,7 +29,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             if ($user->role === 'admin') {
-                return redirect()->intended('/admin')->with('success', 'Login berhasil! Selamat datang di Dashboard Admin.');
+                return redirect()->intended('/')->with('success', 'Login berhasil! Selamat datang di Dashboard Admin.');
             } else {
                 return redirect()->intended('/')->with('success', 'Login berhasil!');
             }
@@ -138,7 +138,7 @@ class AuthController extends Controller
             Auth::login($user);
 
             if ($user->role === 'admin') {
-                return redirect('/admin')->with('success', 'Login berhasil! Selamat datang di Dashboard Admin.');
+                return redirect('/')->with('success', 'Login berhasil! Selamat datang di Dashboard Admin.');
             } else {
                 return redirect('/')->with('success', 'Login berhasil!');
             }

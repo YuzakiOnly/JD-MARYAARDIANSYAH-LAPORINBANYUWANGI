@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useImperativeHandle, forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +12,7 @@ import FormField, { FormFieldWithCounter } from '@/components/validation/FormFie
 import ImageUpload from '@/components/validation/ImageUploud';
 import { useFormHandler } from '@/hooks/useFormHandler';
 
-export const InputForm = () => {
+export const InputForm = forwardRef((props, ref) => {
     const { categories, kecamatans } = usePage().props;
     
     const {
@@ -28,8 +28,13 @@ export const InputForm = () => {
         handlePhoneChange,
         removeImage,
         getFieldError,
-        getFieldProps
+        getFieldProps,
+        handleLocationSelect
     } = useFormHandler();
+
+    useImperativeHandle(ref, () => ({
+        selectLocation: handleLocationSelect
+    }), [handleLocationSelect]);
     
     const itemVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -56,8 +61,7 @@ export const InputForm = () => {
                 custom={1} 
                 label="Judul Laporan" 
                 required 
-                error={getFieldError('judul_laporan')}
-            >
+                error={getFieldError('judul_laporan')}>
                 <Input
                     placeholder="Contoh: Jalan Berlubang di Jl. Ahmad Yani"
                     {...getFieldProps('judul_laporan')}
@@ -91,8 +95,7 @@ export const InputForm = () => {
             >
                 <Select 
                     value={data.category_id} 
-                    onValueChange={(value) => setData('category_id', value)}
-                >
+                    onValueChange={(value) => setData('category_id', value)}>
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih Kategori" />
                     </SelectTrigger>
@@ -136,12 +139,13 @@ export const InputForm = () => {
                 </Select>
             </FormField>
 
-            {/* Location Real */}
+            {/* Location */}
             <FormField 
                 custom={5} 
                 label="Lokasi Asli" 
                 required 
                 error={getFieldError('lokasi_asli')}
+                helper="Klik pada peta di sebelah kanan untuk mengisi otomatis, atau ketik manual"
             >
                 <Input
                     placeholder="Contoh: Depan Toko Makmur, Jl. Ahmad Yani"
@@ -155,7 +159,7 @@ export const InputForm = () => {
                 label="Deskripsi"
                 required
                 error={getFieldError('deskripsi')}
-                currentLength={data.deskripsi.length}
+                currentLength={data.deskripsi?.length || 0}
                 minLength={10}
             >
                 <Textarea
@@ -211,6 +215,8 @@ export const InputForm = () => {
             </motion.div>
         </motion.form>
     );
-};
+});
+
+InputForm.displayName = 'InputForm';
 
 export default InputForm;

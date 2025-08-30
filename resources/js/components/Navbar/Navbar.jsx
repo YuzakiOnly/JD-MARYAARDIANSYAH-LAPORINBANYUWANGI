@@ -37,7 +37,7 @@ export const Navbar = () => {
 
     return (
         <>
-            <div className="sticky top-0 z-40 w-full bg-white/20 backdrop-blur-lg shadow transition-all duration-300">
+            <div className="sticky top-0 z-40 w-full bg-white shadow transition-all duration-300">
                 <div className="max-w-screen-xl mx-auto p-4 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center tracking-tight font-jetbrains hover:opacity-80 transition-opacity">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { validateForm } from '@/lib/validation';
@@ -17,12 +17,22 @@ const initialFormData = {
 };
 
 export const useFormHandler = (submitUrl = '/laporin') => {
+    const { data, setData, post, processing, errors, reset } = useForm(initialFormData);
+    
+    const [coordinates, setCoordinates] = useState({
+        lat: null,
+        lng: null
+    });
+    
     const [dateTime, setDateTime] = useState();
     const [imagePreview, setImagePreview] = useState(null);
 
-    const { data, setData, post, processing, errors, reset } = useForm(initialFormData);
+    const handleLocationSelect = useCallback((locationString, lat, lng) => {
+        setData('lokasi_asli', locationString);
+        setCoordinates({ lat, lng });
+    }, [setData]);
 
-    const handleDateTimeChange = (selectedDateTime) => {
+    const handleDateTimeChange = useCallback((selectedDateTime) => {
         setDateTime(selectedDateTime);
         if (selectedDateTime) {
             setData('tanggal_kejadian', format(selectedDateTime, "yyyy-MM-dd"));
@@ -31,36 +41,39 @@ export const useFormHandler = (submitUrl = '/laporin') => {
             setData('tanggal_kejadian', '');
             setData('waktu_kejadian', '');
         }
-    };
+    }, [setData]);
 
-    const handleImageChange = (file) => {
+    const handleImageChange = useCallback((file) => {
         setData('image', file);
         
-        const reader = new FileReader();
-        reader.onload = (e) => setImagePreview(e.target.result);
-        reader.readAsDataURL(file);
-    };
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => setImagePreview(e.target.result);
+            reader.readAsDataURL(file);
+        }
+    }, [setData]);
 
-    const removeImage = () => {
+    const removeImage = useCallback(() => {
         setImagePreview(null);
         setData('image', null);
-    };
+    }, [setData]);
 
-    const clearAllFields = () => {
+    const clearAllFields = useCallback(() => {
         reset();
         setDateTime(null);
         setImagePreview(null);
+        setCoordinates({ lat: null, lng: null });
         
         const fileInput = document.querySelector('input[type="file"]');
         if (fileInput) fileInput.value = '';
-    };
+    }, [reset]);
 
-    const handlePhoneChange = (value) => {
+    const handlePhoneChange = useCallback((value) => {
         const numericValue = value.replace(/\D/g, '');
         setData('no_telpon', numericValue);
-    };
+    }, [setData]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = useCallback((e) => {
         e.preventDefault();
         
         const validationErrors = validateForm(data);
@@ -80,16 +93,16 @@ export const useFormHandler = (submitUrl = '/laporin') => {
                 });
             }
         });
-    };
+    }, [data, post, submitUrl, clearAllFields]);
 
-    const getFieldError = (fieldName) => errors[fieldName];
+    const getFieldError = useCallback((fieldName) => errors[fieldName], [errors]);
     
-    const getFieldProps = (fieldName, additionalProps = {}) => ({
-        value: data[fieldName],
+    const getFieldProps = useCallback((fieldName, additionalProps = {}) => ({
+        value: data[fieldName] || '',
         onChange: (e) => setData(fieldName, e.target.value),
-        className: getFieldError(fieldName) ? 'border-red-500' : '',
+        className: errors[fieldName] ? 'border-red-500' : '',
         ...additionalProps
-    });
+    }), [data, setData, errors]);
 
     return {
         data,
@@ -98,6 +111,7 @@ export const useFormHandler = (submitUrl = '/laporin') => {
         errors,
         dateTime,
         imagePreview,
+        coordinates,
 
         handleSubmit,
         handleDateTimeChange,
@@ -105,6 +119,7 @@ export const useFormHandler = (submitUrl = '/laporin') => {
         handlePhoneChange,
         removeImage,
         clearAllFields,
+        handleLocationSelect,
 
         getFieldError,
         getFieldProps

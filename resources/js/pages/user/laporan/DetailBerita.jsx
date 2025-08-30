@@ -1,12 +1,14 @@
 import { MainLayout } from '@/pages/layouts/MainLayout';
+import DetailBeritaContent from '@/components/user/DetailBeritaContent';
 import { motion } from 'framer-motion';
 import {
     ArrowLeft
 } from 'lucide-react';
+import { Link } from '@inertiajs/react';
 import { BannerUI } from '@/components/BannerUI';
 import { HeroPattern } from '@/components/HeroPattern';
 
-const DetailBerita = () => (
+const DetailBerita = ({ laporan, relatedReports }) => (
     <div className="min-h-screen bg-gray-50 py-10 w-full">
         <BannerUI
             image=" /assets/image/8.jpg"
@@ -21,7 +23,8 @@ const DetailBerita = () => (
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="mb-6">
+                    className="mb-6"
+                >
                     <button
                         type="button"
                         onClick={() => window.history.back()}
@@ -30,6 +33,7 @@ const DetailBerita = () => (
                         <span className="font-medium">Kembali ke Halaman Sebelumnya</span>
                     </button>
                 </motion.div>
+                <DetailBeritaContent laporan={laporan} relatedReports={relatedReports} />
             </div>
         </HeroPattern>
     </div>

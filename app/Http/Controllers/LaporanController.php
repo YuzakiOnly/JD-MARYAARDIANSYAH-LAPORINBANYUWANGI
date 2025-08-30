@@ -134,14 +134,120 @@ class LaporanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Laporan $laporan)
+    public function show(Laporan $laporan, $slug)
     {
-        return Inertia::render('user/laporan/DetailBerita');
+        $laporan = Laporan::with(['category', 'kecamatan', 'user'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $formattedLaporan = [
+            'id'          => $laporan->id,
+            'slug'        => $laporan->slug,
+            'title'       => $laporan->judul_laporan,
+            'description' => $laporan->deskripsi,
+            'image'       => $laporan->image
+                ? Storage::url('laporan_images/' . $laporan->image)
+                : '/images/placeholder.jpg',
+            'category'    => $laporan->category->name,
+            'location'    => $laporan->lokasi_asli,
+            'date'        => $laporan->tanggal_kejadian->format('d M Y'),
+            'time'        => $laporan->waktu_kejadian->format('H:i'),
+            'status'      => $this->formatStatus($laporan->status),
+            'author'      => $laporan->user->name ?? 'Anonim',
+            'no_telpon'   => $laporan->no_telpon,
+            'kecamatan'   => $laporan->kecamatan->name,
+            'created_at'  => $laporan->created_at,
+            'updated_at'  => $laporan->updated_at,
+        ];
+
+        $relatedReports = Laporan::with(['category', 'user', 'kecamatan'])
+            ->where('category_id', $laporan->category_id)
+            ->where('id', '!=', $laporan->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(4)
+            ->get()
+            ->map(fn($l) => [
+                'id'          => $l->id,
+                'slug'        => $l->slug,
+                'title'       => $l->judul_laporan,
+                'location'    => $l->lokasi_asli,
+                'date'        => $l->tanggal_kejadian->format('d M Y'),
+                'time'        => $l->waktu_kejadian->format('H:i'),
+                'image'       => $l->image ? Storage::url('laporan_images/' . $l->image) : '/images/placeholder.jpg',
+                'status'      => $this->formatStatus($l->status),
+                'category'    => $l->category->name ?? '-',
+                'author'      => $l->user->name ?? 'Anonim',
+                'description' => Str::limit($l->deskripsi, 120),
+            ]);
+
+        return Inertia::render('user/laporan/DetailBerita', [
+            'laporan' => $formattedLaporan,
+            'relatedReports' => $relatedReports
+        ]);
     }
 
-    public function BeritaLaporan(Request $request)
+    public function beritaLaporan(Request $request)
     {
-        return Inertia::render('user/laporan/BeritaLaporan');
+        $query = Laporan::with(['category', 'kecamatan', 'user'])
+            ->select([
+                'id',
+                'judul_laporan',
+                'slug',
+                'category_id',
+                'kecamatan_id',
+                'lokasi_asli',
+                'deskripsi',
+                'tanggal_kejadian',
+                'waktu_kejadian',
+                'image',
+                'status',
+                'created_at',
+                'user_id'
+            ])
+            ->orderBy('created_at', 'desc');
+
+        // Filter
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('category_id', $request->category);
+        }
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('kecamatan') && $request->kecamatan !== 'all') {
+            $query->where('kecamatan_id', $request->kecamatan);
+        }
+        if ($request->filled('search')) {
+            $query->where('judul_laporan', 'like', '%' . $request->search . '%');
+        }
+
+        $laporans = $query->get()->map(fn($lap) => [
+            'id'          => $lap->id,
+            'slug'        => $lap->slug,
+            'title'       => $lap->judul_laporan,
+            'description' => $lap->deskripsi,
+            'image'       => $lap->image
+                ? Storage::url('laporan_images/' . $lap->image)
+                : '/images/placeholder.jpg',
+            'category'    => $lap->category->name,
+            'location'    => $lap->lokasi_asli,
+            'date'        => $lap->tanggal_kejadian->format('d M Y'),
+            'time'        => $lap->waktu_kejadian->format('H:i'),
+            'status'      => $this->formatStatus($lap->status),
+            'author'      => $lap->user->name ?? 'Anonim',
+            'created_at'  => $lap->created_at,
+        ]);
+
+        return Inertia::render('user/laporan/BeritaLaporan', [
+            'laporans'   => $laporans,
+            'categories' => Category::all(['id', 'name']),
+            'kecamatans' => Kecamatan::all(['id', 'name']),
+            'statuses'   => [
+                ['value' => 'belum_diproses', 'label' => 'Belum Diproses'],
+                ['value' => 'proses',         'label' => 'Diproses'],
+                ['value' => 'selesai',        'label' => 'Selesai'],
+            ],
+            'filters' => $request->only(['search', 'category', 'status', 'kecamatan']),
+        ]);
     }
 
     /**
