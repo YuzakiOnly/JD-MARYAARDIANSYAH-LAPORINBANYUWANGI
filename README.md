@@ -113,25 +113,31 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-6. Konfigurasikan database di file .env, lalu jalankan migrasi:
+6. Edit .env untuk database dan tambahkan:
+```bash
+GOOGLE_CLIENT_ID=xxxxxxxxxxxx
+GOOGLE_CLIENT_SECRET=xxxxxxxxxxxx
+```
+
+7. Konfigurasikan database di file .env, lalu jalankan migrasi:
 
 ```bash
 php artisan migrate --seed
 ```
 
-7. Buat symbolic link untuk storage:
+8. Buat symbolic link untuk storage:
 
 ```bash
 php artisan storage:link
 ```
 
-8. Jalankan server backend Laravel:
+9. Jalankan server backend Laravel:
 
 ```bash
 php artisan serve
 ```
 
-9. Jalankan server frontend React (Vite):
+10. Jalankan server frontend React (Vite):
 
 ```bash
 npm run dev 
