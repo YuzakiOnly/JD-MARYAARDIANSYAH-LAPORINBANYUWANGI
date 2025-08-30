@@ -12,7 +12,7 @@ const AboutSection = () => {
     ];
 
     return (
-        <div id="tentang" className="w-full bg-gray-50 py-20">
+        <div className="w-full bg-gray-50 py-20">
             <div className="max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 text-center space-y-12">
                 {/* Judul */}
                 <motion.div
@@ -31,7 +31,7 @@ const AboutSection = () => {
                 </motion.div>
 
                 {/* Fitur */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
                     {features.map((f, index) => (
                         <motion.div
                             key={index}
@@ -39,9 +39,10 @@ const AboutSection = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: index * 0.2 }}
                             viewport={{ once: true, amount: 0.2 }}
-                            className="transition">
-                            <Card className="rounded-2xl shadow-md hover:shadow-lg transition-all">
-                                <CardContent className="p-6 flex flex-col items-center text-center">
+                            className="h-full"
+                        >
+                            <Card className="h-full rounded-2xl shadow-md hover:shadow-lg transition-all flex">
+                                <CardContent className="p-6 flex flex-col items-center text-center flex-1">
                                     {f.icon}
                                     <h3 className="font-semibold text-lg mt-3 mb-1">{f.title}</h3>
                                     <p className="text-sm text-slate-600">{f.desc}</p>
@@ -50,8 +51,10 @@ const AboutSection = () => {
                         </motion.div>
                     ))}
                 </div>
+
             </div>
         </div>
+
     );
 };
 

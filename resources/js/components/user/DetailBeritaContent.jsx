@@ -19,7 +19,7 @@ import ContactPelapor from '@/components/ContactPelapor';
 const DetailBeritaContent = ({ laporan, relatedReports = [] }) => {
     const sideNews = useMemo(() => {
         const shuffled = [...relatedReports].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, 4);
+        return shuffled.slice(0, 6);
     }, [relatedReports]);
 
     const getCategoryColor = (category) => {
@@ -215,17 +215,20 @@ const DetailBeritaContent = ({ laporan, relatedReports = [] }) => {
                                                         Dibuat oleh <span className="font-medium"> {item.author}</span>
                                                     </span>
                                                 </div>
-                                                <h3 className="text-sm md:text-base font-semibold text-slate-800 line-clamp-2 mb-1">
-                                                    {item.title}
+                                                <h3 className="text-sm md:text-base font-semibold text-slate-800 mb-1 break-words max-w-full">
+                                                    {item.title?.length > 50
+                                                        ? item.title.substring(0, 50) + '…'
+                                                        : item.title}
                                                 </h3>
-                                                <div className="flex gap-2 mb-1">
+
+                                                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-1">
                                                     <span
-                                                        className={`text-xs font-medium px-2 py-0.5 rounded-full ${getCategoryColor(item.category)}`}
+                                                        className={`text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full ${getCategoryColor(item.category)}`}
                                                     >
                                                         {item.category}
                                                     </span>
                                                     <span
-                                                        className={`text-xs font-medium px-2 py-0.5 rounded-full ${getStatusColor(item.status)}`}
+                                                        className={`text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full ${getStatusColor(item.status)}`}
                                                     >
                                                         {item.status}
                                                     </span>
@@ -245,7 +248,7 @@ const DetailBeritaContent = ({ laporan, relatedReports = [] }) => {
                                             </div>
                                         </div>
 
-                                        {/* Arrow absolute di tengah kanan */}
+                                        {/* Arrow Right */}
                                         <FaArrowRight className="absolute top-1/2 -translate-y-1/2 right-4 text-slate-400" />
                                     </Link>
 

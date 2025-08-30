@@ -50,12 +50,6 @@ const Login = () => {
                         <label className="text-sm text-gray-600 dark:text-gray-200">
                             Password
                         </label>
-                        <Link
-                            href="/forgot-password"
-                            className="text-sm text-blue-500 focus:text-blue-400 hover:text-blue-400 hover:underline"
-                        >
-                            Forgot password?
-                        </Link>
                     </div>
 
                     <div className="relative">

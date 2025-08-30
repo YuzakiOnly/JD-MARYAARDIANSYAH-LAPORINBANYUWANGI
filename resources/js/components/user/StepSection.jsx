@@ -102,7 +102,7 @@ const StepSection = () => {
                     ))}
                 </div>
 
-                <div className="lg:hidden grid grid-cols-1 gap-10 max-w-sm mx-auto">
+                <div className="lg:hidden grid grid-cols-2 gap-8 max-w-lg mx-auto">
                     {steps.map((step, index) => (
                         <motion.div
                             key={step.id}

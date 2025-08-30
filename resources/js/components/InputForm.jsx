@@ -14,7 +14,7 @@ import { useFormHandler } from '@/hooks/useFormHandler';
 
 export const InputForm = forwardRef((props, ref) => {
     const { categories, kecamatans } = usePage().props;
-    
+
     const {
         data,
         setData,
@@ -35,13 +35,13 @@ export const InputForm = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         selectLocation: handleLocationSelect
     }), [handleLocationSelect]);
-    
+
     const itemVariants = {
         hidden: { opacity: 0, y: 20 },
-        visible: (i) => ({ 
-            opacity: 1, 
-            y: 0, 
-            transition: { delay: i * 0.08, duration: 0.4 } 
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: { delay: i * 0.08, duration: 0.4 }
         })
     };
 
@@ -57,22 +57,23 @@ export const InputForm = forwardRef((props, ref) => {
             </motion.div>
 
             {/* Title Laporan */}
-            <FormField 
-                custom={1} 
-                label="Judul Laporan" 
-                required 
+            <FormField
+                custom={1}
+                label="Judul Laporan"
+                required
                 error={getFieldError('judul_laporan')}>
                 <Input
                     placeholder="Contoh: Jalan Berlubang di Jl. Ahmad Yani"
+                    maxLength={60}
                     {...getFieldProps('judul_laporan')}
                 />
             </FormField>
 
             {/* No Telpon */}
-            <FormField 
-                custom={2} 
-                label="No. Telpon" 
-                required 
+            <FormField
+                custom={2}
+                label="No. Telpon"
+                required
                 error={getFieldError('no_telpon')}
                 helper="Masukkan nomor telepon tanpa spasi atau tanda (-). Minimal 11 digit, maksimal 14 digit."
             >
@@ -87,14 +88,14 @@ export const InputForm = forwardRef((props, ref) => {
             </FormField>
 
             {/* categories */}
-            <FormField 
-                custom={3} 
-                label="Kategori" 
-                required 
+            <FormField
+                custom={3}
+                label="Kategori"
+                required
                 error={getFieldError('category_id')}
             >
-                <Select 
-                    value={data.category_id} 
+                <Select
+                    value={data.category_id}
                     onValueChange={(value) => setData('category_id', value)}>
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih Kategori" />
@@ -113,14 +114,14 @@ export const InputForm = forwardRef((props, ref) => {
             </FormField>
 
             {/* Kecamatans */}
-            <FormField 
-                custom={4} 
-                label="Wilayah / Kecamatan" 
-                required 
+            <FormField
+                custom={4}
+                label="Wilayah / Kecamatan"
+                required
                 error={getFieldError('kecamatan_id')}
             >
-                <Select 
-                    value={data.kecamatan_id} 
+                <Select
+                    value={data.kecamatan_id}
                     onValueChange={(value) => setData('kecamatan_id', value)}
                 >
                     <SelectTrigger className="w-full">
@@ -140,10 +141,10 @@ export const InputForm = forwardRef((props, ref) => {
             </FormField>
 
             {/* Location */}
-            <FormField 
-                custom={5} 
-                label="Lokasi Asli" 
-                required 
+            <FormField
+                custom={5}
+                label="Lokasi Asli"
+                required
                 error={getFieldError('lokasi_asli')}
                 helper="Klik pada peta di sebelah kanan untuk mengisi otomatis, atau ketik manual"
             >
@@ -160,19 +161,21 @@ export const InputForm = forwardRef((props, ref) => {
                 required
                 error={getFieldError('deskripsi')}
                 currentLength={data.deskripsi?.length || 0}
-                minLength={10}
+                minLength={25}
+                maxLength={1000}
             >
                 <Textarea
-                    placeholder="Tulis detail laporan Anda di sini... (minimal 10 karakter)"
+                    placeholder="Tulis detail laporan Anda di sini... (min. 25, maks. 1.000 karakter)"
                     rows={4}
+                    maxLength={1000}
                     {...getFieldProps('deskripsi')}
                 />
             </FormFieldWithCounter>
 
             {/* Date & Time */}
-            <FormField 
-                custom={7} 
-                label="Tanggal & Waktu Kejadian" 
+            <FormField
+                custom={7}
+                label="Tanggal & Waktu Kejadian"
                 required
             >
                 <DateTimePicker24h
@@ -183,10 +186,10 @@ export const InputForm = forwardRef((props, ref) => {
             </FormField>
 
             {/* image */}
-            <FormField 
-                custom={8} 
-                label="Unggah Gambar" 
-                required 
+            <FormField
+                custom={8}
+                label="Unggah Gambar"
+                required
                 error={getFieldError('image')}
             >
                 <ImageUpload

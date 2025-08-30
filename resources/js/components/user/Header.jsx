@@ -20,32 +20,32 @@ const Header = ({ stats = {} }) => {
   }, [stats]);
 
   const statsConfig = [
-    { 
-      key: 'laporan', 
-      value: displayStats.laporan + "+", 
-      label: "Total Laporan", 
-      icon: TrendingUp, 
-      color: "text-blue-600", 
-      bgColor: "bg-blue-50", 
-      borderColor: "border-blue-200" 
+    {
+      key: 'laporan',
+      value: displayStats.laporan + "+",
+      label: "Total Laporan",
+      icon: TrendingUp,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200"
     },
-    { 
-      key: 'warga', 
-      value: displayStats.warga + "+", 
-      label: "Total Warga", 
-      icon: Users, 
-      color: "text-green-600", 
-      bgColor: "bg-green-50", 
-      borderColor: "border-green-200" 
+    {
+      key: 'warga',
+      value: displayStats.warga + "+",
+      label: "Total Warga",
+      icon: Users,
+      color: "text-green-600",
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200"
     },
-    { 
-      key: 'selesai', 
-      value: displayStats.selesai + "%", 
-      label: "Laporan Selesai", 
-      icon: CheckCircle, 
-      color: "text-purple-600", 
-      bgColor: "bg-purple-50", 
-      borderColor: "border-purple-200" 
+    {
+      key: 'selesai',
+      value: displayStats.selesai + "%",
+      label: "Laporan Selesai",
+      icon: CheckCircle,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200"
     }
   ];
 
@@ -87,15 +87,20 @@ const Header = ({ stats = {} }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`flex-1 p-2 sm:p-3 sm:px-4 cursor-pointer rounded-lg ${stat.bgColor} border ${stat.borderColor} hover:shadow-md transition-all duration-300`}>
+                className={`flex-1 p-2 sm:p-3 sm:px-4 cursor-pointer rounded-lg ${stat.bgColor} border ${stat.borderColor} hover:shadow-md transition-all duration-300`}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <div className={`text-base sm:text-lg font-bold ${stat.color} mb-1`}>
+                    {/* Value */}
+                    <div className={`text-sm sm:text-base md:text-lg font-bold ${stat.color} mb-0.5 sm:mb-1`}>
                       {stat.value}
                     </div>
-                    <div className="text-xs text-slate-600 leading-tight">{stat.label}</div>
+                    {/* Label */}
+                    <div className="text-[10px] sm:text-xs text-slate-600 leading-tight">
+                      {stat.label}
+                    </div>
                   </div>
-                  <IconComponent className={`h-4 w-4 ${stat.color} opacity-60`} />
+                  <IconComponent className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color} opacity-60`} />
                 </div>
               </motion.div>
             );
@@ -111,19 +116,26 @@ const Header = ({ stats = {} }) => {
         >
           <Link
             href="/laporin"
-            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg px-4 py-2 sm:px-5 sm:py-3 transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-sm md:text-base"
+            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
+              text-white font-medium rounded-lg px-3 py-2 sm:px-5 sm:py-3 transition-all duration-300 
+                flex items-center justify-center gap-2 group shadow-lg hover:shadow-xl transform hover:-translate-y-1 
+                text-xs sm:text-sm md:text-base"
           >
             <Megaphone className="h-4 w-4 sm:h-5 sm:w-5" />
             Laporkan Sekarang
           </Link>
           <Link
             href="/berita-laporan"
-            className="flex-1 sm:flex-none border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium rounded-lg px-4 py-2 sm:px-5 sm:py-3 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base group transform hover:-translate-y-1"
+            className="flex-1 sm:flex-none border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white 
+                font-medium rounded-lg px-3 py-2 sm:px-5 sm:py-3 transition-all duration-300 
+                flex items-center justify-center gap-2 text-xs sm:text-sm md:text-base 
+                group transform hover:-translate-y-1"
           >
             <Newspaper className="h-4 w-4 sm:h-5 sm:w-5" />
             Lihat Semua Berita
           </Link>
         </motion.div>
+
       </motion.div>
 
       <motion.div

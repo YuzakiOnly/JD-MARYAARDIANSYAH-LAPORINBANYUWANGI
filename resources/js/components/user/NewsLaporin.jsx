@@ -67,22 +67,26 @@ const NewsLaporin = ({ laporans = [] }) => {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true, amount: 0.2 }}>
-                    <h1 className="text-xl md:text-4xl font-bold leading-tight text-slate-800">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-slate-800">
                         Laporan Terbaru!
                         <div>
-                            <span className='bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent'>
+                            <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
                                 Untuk Kamu
                             </span>
                         </div>
                     </h1>
-                    <p className="text-lg text-slate-600">Laporan terbaru dari warga Banyuwangi.</p>
+                    <p className="text-base sm:text-lg text-slate-600">
+                        Laporan terbaru dari warga Banyuwangi.
+                    </p>
                 </motion.div>
 
                 <motion.div
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8 }}
-                    viewport={{ once: true, amount: 0.2 }}>
+                    viewport={{ once: true, amount: 0.2 }}
+                    className="hidden sm:block"
+                >
                     <Link
                         href="/berita-laporan"
                         className="w-full sm:w-auto border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium rounded-lg px-6 py-3 transition flex items-center justify-center gap-2 group">
@@ -128,16 +132,18 @@ const NewsLaporin = ({ laporans = [] }) => {
                                 </span>
                             </div>
 
-                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-800 line-clamp-3 flex-shrink-0">
+                            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-800 line-clamp-3 flex-shrink-0 truncate">
                                 {mainNews.title}
                             </h2>
 
-                            <p className="text-sm text-slate-600 line-clamp-3 flex items-center gap-1.5 flex-1">
+                            <p className="text-sm text-slate-600 flex items-center gap-1.5 flex-1">
                                 <AlertCircle size={14} className="mt-0.5 flex-shrink-0 text-emerald-500" />
-                                <span className="flex-1">{mainNews.description}</span>
+                                <span className="flex-1 line-clamp-3">
+                                    {mainNews.description}
+                                </span>
                             </p>
 
-                            <div className="text-sm text-slate-600 space-y-2 pt-2 border-t border-slate-100">
+                            <div className="text-sm text-slate-600 space-y-2 border-slate-100">
                                 <div className="flex items-center gap-1.5">
                                     <MapPin size={14} className="text-red-500 flex-shrink-0" />
                                     <span className="truncate">{mainNews.location}</span>
@@ -181,8 +187,8 @@ const NewsLaporin = ({ laporans = [] }) => {
                                             </span>
                                         </div>
 
-                                        <h3 className="text-sm lg:text-base font-semibold text-slate-800 line-clamp-2 leading-tight">
-                                            {item.title}
+                                        <h3 className="text-sm lg:text-base font-semibold text-slate-800 line-clamp-2 leading-tight truncate">
+                                            {mainNews.title}
                                         </h3>
 
                                         <div className="flex flex-wrap gap-1.5">

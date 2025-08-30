@@ -63,46 +63,6 @@ class AuthController extends Controller
             ->with('success', 'Registrasi berhasil! Selamat datang.');
     }
 
-    public function forgotPassword(Request $request)
-    {
-        $request->validate(['email' => 'required|email']);
-
-        $user = User::where('email', $request->email)
-                    ->whereNull('google_id')   
-                    ->first();
-
-        if (!$user) {
-            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
-        }
-
-        return redirect()->route('password.reset', [
-            'token' => 'manual-flow',
-            'email' => $user->email,
-        ]);
-    }
-
-    public function resetPassword(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if ($user) {
-            $user->update([
-                'password' => Hash::make($request->password),
-                'remember_token' => Str::random(60),
-            ]);
-
-            return redirect('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
-        }
-
-        return redirect('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
-    }
-
-
     public function google_redirect()
     {
         return Socialite::driver('google')->redirect();

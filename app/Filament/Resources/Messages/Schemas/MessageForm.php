@@ -45,6 +45,8 @@ class MessageForm
                     ->required(),
                 Textarea::make('deskripsi')
                     ->label('Description')
+                    ->minLength(10)
+                    ->maxLength(500)
                     ->columnSpanFull()
                     ->required(),
             ]);

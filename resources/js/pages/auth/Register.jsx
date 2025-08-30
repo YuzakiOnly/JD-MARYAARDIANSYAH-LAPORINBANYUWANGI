@@ -123,7 +123,7 @@ function Register () {
                             className="absolute inset-y-0 -top-1 right-0 flex items-center pr-3 mt-2"
                         >
                             {showPasswordConfirmation ? (
-                                <FaRegEye className="size-5 text-green-500 cursor-pointer" />
+                                <FaRegEye className="size-5 text-red-500 cursor-pointer" />
                             ) : (
                                 <FaRegEyeSlash className="size-5 text-green-500 cursor-pointer" />
                             )}

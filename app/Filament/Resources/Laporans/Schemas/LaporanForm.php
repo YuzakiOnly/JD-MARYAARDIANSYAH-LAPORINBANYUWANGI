@@ -25,6 +25,7 @@ class LaporanForm
             ->components([
                 TextInput::make('judul_laporan')
                     ->placeholder(('Contoh: Jalan Berlubang di Jl. Ahmad Yani'))
+                    ->maxLength(60)
                     ->required(),
 
                 Hidden::make('slug')
@@ -75,7 +76,8 @@ class LaporanForm
                 Textarea::make('deskripsi')
                     ->required()
                     ->required()
-                    ->minLength(10)
+                    ->maxLength(1000)
+                    ->minLength(25)
                     ->columnSpanFull(),
 
                 DatePicker::make('tanggal_kejadian')
@@ -99,10 +101,12 @@ class LaporanForm
                         $old = $record?->image;
                         $path = $file->store('laporan_images', 'public');
                         $new = basename($path);
+
                         if ($old && $old !== $new) {
                             Storage::disk('public')->delete('laporan_images/' . $old);
                         }
-                        return $new;
+
+                        return $new; 
                     })
                     ->getUploadedFileUsing(
                         fn($file) => $file
@@ -112,6 +116,14 @@ class LaporanForm
                         ]
                         : null
                     )
+                    ->afterStateHydrated(function ($component, $state) {
+                        if ($state && is_string($state)) {
+                            $component->state([
+                                'name' => $state,
+                                'url' => Storage::disk('public')->url('laporan_images/' . $state),
+                            ]);
+                        }
+                    })
                     ->required(fn($livewire) => $livewire instanceof CreateRecord)
                     ->maxSize(10240)
                     ->columnSpanFull(),

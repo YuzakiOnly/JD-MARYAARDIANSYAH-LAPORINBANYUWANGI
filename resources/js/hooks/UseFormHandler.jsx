@@ -18,12 +18,12 @@ const initialFormData = {
 
 export const useFormHandler = (submitUrl = '/laporin') => {
     const { data, setData, post, processing, errors, reset } = useForm(initialFormData);
-    
+
     const [coordinates, setCoordinates] = useState({
         lat: null,
         lng: null
     });
-    
+
     const [dateTime, setDateTime] = useState();
     const [imagePreview, setImagePreview] = useState(null);
 
@@ -45,7 +45,7 @@ export const useFormHandler = (submitUrl = '/laporin') => {
 
     const handleImageChange = useCallback((file) => {
         setData('image', file);
-        
+
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => setImagePreview(e.target.result);
@@ -63,7 +63,7 @@ export const useFormHandler = (submitUrl = '/laporin') => {
         setDateTime(null);
         setImagePreview(null);
         setCoordinates({ lat: null, lng: null });
-        
+
         const fileInput = document.querySelector('input[type="file"]');
         if (fileInput) fileInput.value = '';
     }, [reset]);
@@ -75,7 +75,7 @@ export const useFormHandler = (submitUrl = '/laporin') => {
 
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
-        
+
         const validationErrors = validateForm(data);
         if (validationErrors.length > 0) {
             return alerts.formIncomplete(validationErrors);
@@ -96,7 +96,7 @@ export const useFormHandler = (submitUrl = '/laporin') => {
     }, [data, post, submitUrl, clearAllFields]);
 
     const getFieldError = useCallback((fieldName) => errors[fieldName], [errors]);
-    
+
     const getFieldProps = useCallback((fieldName, additionalProps = {}) => ({
         value: data[fieldName] || '',
         onChange: (e) => setData(fieldName, e.target.value),

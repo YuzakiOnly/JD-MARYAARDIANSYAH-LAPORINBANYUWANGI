@@ -36,8 +36,7 @@ export const NewsPage = ({ laporans, categories, statuses, kecamatans, filters }
 
     return (
         <div className="max-w-screen-xl mx-auto px-4 -mt-10 relative z-20">
-            <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-col md:flex-row gap-4 items-center">
-
+            <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-4">
                 {/* Search Input */}
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -50,52 +49,54 @@ export const NewsPage = ({ laporans, categories, statuses, kecamatans, filters }
                     />
                 </div>
 
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Semua Kategori" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">Semua Kategori</SelectItem>
-                        {categories.map((c) => (
-                            <SelectItem key={c.id} value={c.id.toString()}>
-                                {c.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                <div className="flex flex-col gap-4 sm:flex-row lg:flex-row lg:gap-4">
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                        <SelectTrigger className="w-full lg:w-auto">
+                            <SelectValue placeholder="Semua Kategori" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Semua Kategori</SelectItem>
+                            {categories.map((c) => (
+                                <SelectItem key={c.id} value={c.id.toString()}>
+                                    {c.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-                <Select value={selectedKecamatan} onValueChange={setSelectedKecamatan}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Semua Kecamatan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">Semua Kecamatan</SelectItem>
-                        {kecamatans.map((k) => (
-                            <SelectItem key={k.id} value={k.id.toString()}>
-                                {k.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                    <Select value={selectedKecamatan} onValueChange={setSelectedKecamatan}>
+                        <SelectTrigger className="w-full lg:w-auto">
+                            <SelectValue placeholder="Semua Kecamatan" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Semua Kecamatan</SelectItem>
+                            {kecamatans.map((k) => (
+                                <SelectItem key={k.id} value={k.id.toString()}>
+                                    {k.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
 
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Semua Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">Semua Status</SelectItem>
-                        {statuses.map((s) => (
-                            <SelectItem key={s.value} value={s.value}>
-                                {s.label}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                    <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                        <SelectTrigger className="w-full lg:w-auto">
+                            <SelectValue placeholder="Semua Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Semua Status</SelectItem>
+                            {statuses.map((s) => (
+                                <SelectItem key={s.value} value={s.value}>
+                                    {s.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
 
             <div className="my-20">
                 {laporans.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                         {laporans.map((lap) => (
                             <CardBerita
                                 key={lap.id}
