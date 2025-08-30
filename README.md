@@ -10,14 +10,14 @@ A modern web application for reporting and managing community issues in Banyuwan
 
 🚀 Tech Stack
 
-Backend: Laravel (PHP Framework)
-Frontend: React with Inertia.js
-Database: MySQL
-UI Components: shadcn/ui with Radix UI
-Styling: Tailwind CSS
-Maps: Leaflet for location services
-Build Tool: Vite
-Animations: Motion & tw-animate-css
+* Backend: Laravel (PHP Framework)
+* Frontend: React with Inertia.js
+* Database: MySQL
+* UI Components: shadcn/ui with Radix UI
+* Styling: Tailwind CSS
+* Maps: Leaflet for location services
+* Build Tool: Vite
+* Animations: Motion & tw-animate-css
 
 ✨ Features
 
