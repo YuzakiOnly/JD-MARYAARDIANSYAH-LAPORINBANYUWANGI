@@ -12,6 +12,8 @@ class KecamatanForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Name Kecamatans')
+                    ->placeholder('Kecamatans')
                     ->required(),
             ]);
     }

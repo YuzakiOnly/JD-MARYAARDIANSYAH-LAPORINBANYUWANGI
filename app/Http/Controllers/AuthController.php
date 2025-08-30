@@ -67,15 +67,14 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)
+                    ->whereNull('google_id')   
+                    ->first();
 
         if (!$user) {
-            return back()->withErrors([
-                'email' => 'Email tidak ditemukan.',
-            ]);
+            return back()->withErrors(['email' => 'Email tidak ditemukan.']);
         }
 
-        // email detect
         return redirect()->route('password.reset', [
             'token' => 'manual-flow',
             'email' => $user->email,
@@ -86,24 +85,19 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'password' => [
-                'required',
-                'min:8',
-                'confirmed',
-                function ($attribute, $value, $fail) use ($request) {
-                    $user = User::where('email', $request->email)->first();
-                    if ($user && Hash::check($value, $user->password)) {
-                        $fail('Password baru tidak boleh sama dengan password lama.');
-                    }
-                },
-            ],
+            'password' => 'required|min:8|confirmed',
         ]);
 
         $user = User::where('email', $request->email)->first();
-        $user->update([
-            'password' => Hash::make($request->password),
-            'remember_token' => Str::random(60),
-        ]);
+
+        if ($user) {
+            $user->update([
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(60),
+            ]);
+
+            return redirect('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
+        }
 
         return redirect('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
     }

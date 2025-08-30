@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -18,7 +19,7 @@ class UserInfolist
                     ->dateTime(),
                 TextEntry::make('role'),
                 TextEntry::make('google_id'),
-                TextEntry::make('avatar'),
+                ImageEntry::make('avatar'),
                 TextEntry::make('created_at')
                     ->dateTime(),
                 TextEntry::make('updated_at')

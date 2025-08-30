@@ -2,6 +2,8 @@ import { InputForm } from '@/components/InputForm'
 import { MainLayout } from '@/pages/layouts/MainLayout'
 import { BannerUI } from "@/components/BannerUI";
 import React from 'react'
+import { ShowMap } from '@/components/ShowMap';
+import { StepByStep } from '@/components/StepByStep';
 
 const FormLaporan = () => {
     return (
@@ -16,6 +18,10 @@ const FormLaporan = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <InputForm />
+                    </div>
+                    <div className="space-y-6">
+                        <ShowMap/>
+                        <StepByStep/>
                     </div>
                 </div>
             </div>

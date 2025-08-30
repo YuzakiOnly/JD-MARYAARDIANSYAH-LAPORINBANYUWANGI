@@ -37,8 +37,8 @@ class LaporanForm
                     ->required()
                     ->maxLength(15)
                     ->extraInputAttributes([
-                        'inputmode' => 'numeric',       
-                        'pattern' => '[0-9]*',          
+                        'inputmode' => 'numeric',
+                        'pattern' => '[0-9]*',
                         'onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57',
                     ])
                     ->rules(['regex:/^[0-9]+$/', 'min:10', 'max:15']),
@@ -104,16 +104,18 @@ class LaporanForm
                         }
                         return $new;
                     })
-
+                    ->getUploadedFileUsing(
+                        fn($file) => $file
+                        ? [
+                            'name' => $file,
+                            'url' => Storage::disk('public')->url('laporan_images/' . $file),
+                        ]
+                        : null
+                    )
                     ->required(fn($livewire) => $livewire instanceof CreateRecord)
-
-                    ->afterStateHydrated(function ($component, $state) {
-                        if ($state) {
-                            $component->state('laporan_images/' . $state);
-                        }
-                    })
                     ->maxSize(10240)
                     ->columnSpanFull(),
+
             ]);
     }
 }

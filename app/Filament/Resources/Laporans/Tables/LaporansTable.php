@@ -55,7 +55,8 @@ class LaporansTable
                     ->disk('public')
                     ->getStateUsing(fn($record) => $record->image
                         ? 'laporan_images/' . $record->image
-                        : null),
+                        : null)
+                    ->toggleable(isToggledHiddenByDefault: false),
                 SelectColumn::make('status')
                     ->options([
                         'belum_diproses' => 'Belum diproses',
