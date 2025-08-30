@@ -6,7 +6,8 @@
   <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
 </p>
 
-A modern web application for reporting and managing community issues in Banyuwangi, built with Laravel backend and React frontend using Inertia.js for seamless single-page application experience.
+LAPORIN! BANYUWANGI – SISTEM PELAPORAN WARGA BERBASIS WEB
+---------------------------------------------------------
 
 🚀 Tech Stack
 
