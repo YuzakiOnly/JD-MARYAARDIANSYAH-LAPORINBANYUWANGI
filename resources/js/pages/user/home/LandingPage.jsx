@@ -11,6 +11,7 @@ const LandingPage = ({ laporans = {}, stats = {}, testimonials = [] }) => {
     <>
       <HeroPattern>
         <main className='font-outfit'>
+          {/* Home */}
           <Header stats={stats}/>
           <AboutSection/>
           <NewsLaporin laporans={laporans}/>
