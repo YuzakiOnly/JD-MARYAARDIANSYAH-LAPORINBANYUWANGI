@@ -102,7 +102,7 @@ const Header = ({ stats = {} }) => {
           })}
         </div>
 
-        {/* Tombol Aksi */}
+        {/* Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,14 +111,14 @@ const Header = ({ stats = {} }) => {
         >
           <Link
             href="/laporin"
-            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg px-4 py-2 sm:px-5 sm:py-3 transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg px-4 py-2 sm:px-5 sm:py-3 transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-sm md:text-base"
           >
             <Megaphone className="h-4 w-4 sm:h-5 sm:w-5" />
             Laporkan Sekarang
           </Link>
           <Link
             href="/berita-laporan"
-            className="flex-1 sm:flex-none border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium rounded-lg px-4 py-2 sm:px-5 sm:py-3 transition-all duration-300 flex items-center justify-center gap-2 group transform hover:-translate-y-1"
+            className="flex-1 sm:flex-none border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium rounded-lg px-4 py-2 sm:px-5 sm:py-3 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base group transform hover:-translate-y-1"
           >
             <Newspaper className="h-4 w-4 sm:h-5 sm:w-5" />
             Lihat Semua Berita

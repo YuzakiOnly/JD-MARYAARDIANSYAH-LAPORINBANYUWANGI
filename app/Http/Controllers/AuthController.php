@@ -86,24 +86,28 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|min:8|confirmed',
+            'password' => [
+                'required',
+                'min:8',
+                'confirmed',
+                function ($attribute, $value, $fail) use ($request) {
+                    $user = User::where('email', $request->email)->first();
+                    if ($user && Hash::check($value, $user->password)) {
+                        $fail('Password baru tidak boleh sama dengan password lama.');
+                    }
+                },
+            ],
         ]);
 
         $user = User::where('email', $request->email)->first();
-
-        if ($user) {
-            $user->update([
-                'password' => Hash::make($request->password),
-                'remember_token' => Str::random(60),
-            ]);
-
-            return redirect('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
-        }
-
-        return back()->withErrors([
-            'email' => 'Email tidak ditemukan.',
+        $user->update([
+            'password' => Hash::make($request->password),
+            'remember_token' => Str::random(60),
         ]);
+
+        return redirect('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru.');
     }
+
 
     public function google_redirect()
     {

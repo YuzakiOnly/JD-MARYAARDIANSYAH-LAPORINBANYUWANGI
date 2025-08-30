@@ -37,7 +37,7 @@ export const Navbar = () => {
 
     return (
         <>
-            <div className="sticky top-0 z-40 w-full bg-white shadow transition-all duration-300">
+            <div className="sticky top-0 z-40 w-full bg-white/20 backdrop-blur-lg shadow transition-all duration-300">
                 <div className="max-w-screen-xl mx-auto p-4 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center tracking-tight font-jetbrains hover:opacity-80 transition-opacity">
@@ -70,10 +70,10 @@ export const Navbar = () => {
                         {user && (
                             <Link
                                 href="/laporin"
-                                className={`px-4 py-2.5 font-medium text-sm text-white rounded-full transition-colors shadow-sm hover:shadow-md ${
+                                className={`px-6 py-2.5 font-medium text-sm  text-white rounded-full transition-colors shadow-sm hover:shadow-md ${
                                     url === '/laporin'
                                         ? 'bg-gray-500 cursor-default'
-                                        : 'bg-blue-500 hover:bg-blue-600'
+                                        : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800'
                                 }`}
                             >
                                 {url === '/laporin' ? 'Sedang Membuat Laporan' : 'Laporkan Sekarang'}
@@ -137,7 +137,6 @@ export const Navbar = () => {
             <AnimatePresence>
                 {isOpen && (
                     <>
-                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
