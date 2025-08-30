@@ -8,11 +8,11 @@ const AboutSection = () => {
         { title: "Mudah Digunakan", desc: "Antarmuka sederhana, semua orang bisa melapor dengan cepat.", icon: <CheckCircle className="w-6 h-6 text-blue-500" /> },
         { title: "Realtime", desc: "Laporan diterima dan dipantau langsung oleh admin.", icon: <BarChart3 className="w-6 h-6 text-green-500" /> },
         { title: "Transparan", desc: "Setiap proses laporan bisa dilihat perkembangannya.", icon: <Smile className="w-6 h-6 text-yellow-500" /> },
-        { title: "Multi-Platform", desc: "Akses dari HP, laptop, maupun device manapun & kapan saja.", icon: <Users className="w-6 h-6 text-purple-500" /> },
+        { title: "Multi-Device", desc: "Akses dari HP atau Desktop kapan saja.", icon: <Users className="w-6 h-6 text-purple-500" /> }
     ];
 
     return (
-        <div className="w-full bg-gray-50 py-20">
+        <div className="w-full bg-gray-50 py-40">
             <div className="max-w-screen-xl mx-auto px-4 md:px-8 lg:px-16 text-center space-y-12">
                 {/* Judul */}
                 <motion.div

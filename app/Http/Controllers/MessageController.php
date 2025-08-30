@@ -34,20 +34,20 @@ class MessageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_lengkap'  => 'required|string|max:255',
-            'kecamatan_id'  => 'required|exists:kecamatans,id',
-            'no_telpon'     => 'required|string|max:15',
-            'alamat_email'  => 'required|email|max:255',
-            'deskripsi'     => 'required|string|min:10',
+            'nama_lengkap' => 'required|string|max:255',
+            'kecamatan_id' => 'required|exists:kecamatans,id',
+            'no_telpon' => 'required|string|max:15',
+            'alamat_email' => 'required|email|max:255',
+            'deskripsi' => 'required|string|min:10',
         ]);
 
         Message::create([
             'nama_lengkap' => $request->nama_lengkap,
             'kecamatan_id' => $request->kecamatan_id,
             'user_id' => Auth::id(),
-            'no_telpon'    => $request->no_telpon,
+            'no_telpon' => $request->no_telpon,
             'alamat_email' => $request->alamat_email,
-            'deskripsi'    => $request->deskripsi,
+            'deskripsi' => $request->deskripsi,
         ]);
 
         return back()->with('success', 'Pesan berhasil dikirim!');
@@ -83,5 +83,28 @@ class MessageController extends Controller
     public function destroy(Message $message)
     {
         //
+    }
+
+    /**
+     * Ambil 3 pesan terbaru untuk ditampilkan sebagai testimoni
+     */
+    public function testimonials($laporans, $stats)
+    {
+        $testimonials = Message::with('kecamatan')
+            ->latest()
+            ->limit(3)
+            ->get()
+            ->map(fn($msg) => [
+                'name' => $msg->nama_lengkap,
+                'role' => 'Warga ' . $msg->kecamatan->name,
+                'feedback' => $msg->deskripsi,
+                'image' => 'https://ui-avatars.com/api/?name=' . urlencode($msg->nama_lengkap) . '&background=3b82f6&color=fff',
+            ]);
+
+        return inertia('user/home/LandingPage', [
+            'laporans' => $laporans,
+            'stats' => $stats,
+            'testimonials' => $testimonials,
+        ]);
     }
 }

@@ -19,7 +19,7 @@ import ContactPelapor from '@/components/ContactPelapor';
 const DetailBeritaContent = ({ laporan, relatedReports = [] }) => {
     const sideNews = useMemo(() => {
         const shuffled = [...relatedReports].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, 6);
+        return shuffled.slice(0, 3);
     }, [relatedReports]);
 
     const getCategoryColor = (category) => {
@@ -65,8 +65,9 @@ const DetailBeritaContent = ({ laporan, relatedReports = [] }) => {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Main Content - 3/4 width */}
+            <div className="lg:col-span-3">
                 <motion.article
                     initial="hidden"
                     animate="visible"
@@ -183,80 +184,77 @@ const DetailBeritaContent = ({ laporan, relatedReports = [] }) => {
                 </motion.article>
             </div>
 
-            <div>
+            {/* Sidebar - 1/4 width */}
+            <div className="lg:col-span-1">
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}>
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="sticky top-8"
+                >
                     <h3 className="text-lg font-semibold text-slate-800 mb-6">Laporan Terkait</h3>
                     {sideNews.length > 0 ? (
-                        <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-4">
                             {sideNews.map((item, index) => (
                                 <motion.div
                                     key={item.id}
                                     initial={{ opacity: 0, y: 40 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.6, delay: index * 0.2 }}
-                                    viewport={{ once: true, amount: 0.2 }}>
+                                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                                    viewport={{ once: true, amount: 0.2 }}
+                                >
                                     <Link
                                         href={`/laporan/${item.slug}`}
-                                        className="relative flex items-stretch justify-between gap-4 rounded-xl overflow-hidden shadow hover:shadow-md transition bg-white"
+                                        className="group block bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition-all duration-300"
                                     >
-                                        <div className="flex items-stretch gap-3 flex-1">
+                                        <div className="relative">
                                             <img
                                                 src={item.image || "/images/placeholder.jpg"}
                                                 alt={item.title}
-                                                className="w-28 h-full object-cover flex-shrink-0"
+                                                className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
-                                            <div className="p-2 pr-4 flex flex-col justify-center flex-1 min-w-0">
-                                                <div className="flex items-center text-xs truncate text-slate-500 gap-1.5">
-                                                    <User size={14} className="text-slate-500" />
-                                                    <span>
-                                                        Dibuat oleh <span className="font-medium"> {item.author}</span>
-                                                    </span>
+                                            <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+                                                <span
+                                                    className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${getCategoryColor(item.category)}`}
+                                                >
+                                                    {item.category}
+                                                </span>
+                                                <span
+                                                    className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${getStatusColor(item.status)}`}
+                                                >
+                                                    {item.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="p-3">
+                                            <h4 className="font-semibold text-slate-800 text-sm mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                                                {item.title}
+                                            </h4>
+                                            
+                                            <div className="text-xs text-slate-600 space-y-1">
+                                                <div className="flex items-center gap-1">
+                                                    <User size={10} className="text-slate-400" />
+                                                    <span className="truncate">{item.author}</span>
                                                 </div>
-                                                <h3 className="text-sm md:text-base font-semibold text-slate-800 mb-1 break-words max-w-full">
-                                                    {item.title?.length > 50
-                                                        ? item.title.substring(0, 50) + '…'
-                                                        : item.title}
-                                                </h3>
-
-                                                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-1">
-                                                    <span
-                                                        className={`text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full ${getCategoryColor(item.category)}`}
-                                                    >
-                                                        {item.category}
-                                                    </span>
-                                                    <span
-                                                        className={`text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full ${getStatusColor(item.status)}`}
-                                                    >
-                                                        {item.status}
-                                                    </span>
+                                                <div className="flex items-center gap-1">
+                                                    <MapPin size={10} className="text-red-500" />
+                                                    <span className="truncate">{item.location}</span>
                                                 </div>
-                                                <div className="text-xs text-slate-600 space-y-0.5">
-                                                    <div className="flex items-center gap-1 truncate">
-                                                        <MapPin size={12} className="text-red-500" />
-                                                        <span>{item.location}</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1 truncate">
-                                                        <Calendar size={12} className="text-blue-500" />
-                                                        <span>
-                                                            {item.date} - {item.time}
-                                                        </span>
-                                                    </div>
+                                                <div className="flex items-center gap-1">
+                                                    <Calendar size={10} className="text-blue-500" />
+                                                    <span>{item.date}</span>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {/* Arrow Right */}
-                                        <FaArrowRight className="absolute top-1/2 -translate-y-1/2 right-4 text-slate-400" />
                                     </Link>
-
                                 </motion.div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-slate-500">Tidak ada laporan terkait.</p>
+                        <p className="text-sm text-slate-500 bg-white rounded-lg p-4">
+                            Tidak ada laporan terkait.
+                        </p>
                     )}
                 </motion.div>
             </div>

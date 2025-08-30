@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Kecamatan;
 use App\Models\Laporan;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,7 @@ class LaporanController extends Controller
     {
         $laporans = Laporan::with(['category', 'user', 'kecamatan'])
             ->select('id', 'judul_laporan', 'slug', 'category_id', 'kecamatan_id', 'lokasi_asli', 'deskripsi', 'tanggal_kejadian', 'waktu_kejadian', 'image', 'status', 'created_at', 'user_id')
+            ->where('is_active', true)
             ->orderBy('created_at', 'desc')
             ->limit(20)
             ->get()
@@ -39,7 +41,7 @@ class LaporanController extends Controller
                 'created_at' => $l->created_at,
             ]));
 
-        //calculat
+        // calculate
         $totalLaporan = Laporan::count();
         $totalWarga = User::where('role', 'user')->count();
         $totalProses = Laporan::where('status', 'proses')->count();
@@ -57,13 +59,25 @@ class LaporanController extends Controller
             $persenSelesai = 0;
         }
 
+        $testimonials = Message::with('kecamatan')
+            ->latest()
+            ->limit(3)
+            ->get()
+            ->map(fn($msg) => [
+                'name' => $msg->nama_lengkap,
+                'role' => 'Warga ' . $msg->kecamatan->name,
+                'feedback' => $msg->deskripsi,
+                'image' => 'https://ui-avatars.com/api/?name=' . urlencode($msg->nama_lengkap) . '&background=3b82f6&color=fff',
+            ]);
+
         return Inertia::render('user/home/LandingPage', [
             'laporans' => $laporans,
             'stats' => [
                 'laporan' => $totalLaporan,
                 'warga' => $totalWarga,
-                'selesai' => $persenSelesai
-            ]
+                'selesai' => $persenSelesai,
+            ],
+            'testimonials' => $testimonials,
         ]);
     }
 
@@ -119,6 +133,9 @@ class LaporanController extends Controller
             $validated['user_id'] = null;
         }
 
+        // Default is_active = true (hidup)
+        $validated['is_active'] = true;
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = $file->hashName();
@@ -138,45 +155,47 @@ class LaporanController extends Controller
     {
         $laporan = Laporan::with(['category', 'kecamatan', 'user'])
             ->where('slug', $slug)
+            ->where('is_active', true)
             ->firstOrFail();
 
         $formattedLaporan = [
-            'id'          => $laporan->id,
-            'slug'        => $laporan->slug,
-            'title'       => $laporan->judul_laporan,
+            'id' => $laporan->id,
+            'slug' => $laporan->slug,
+            'title' => $laporan->judul_laporan,
             'description' => $laporan->deskripsi,
-            'image'       => $laporan->image
+            'image' => $laporan->image
                 ? Storage::url('laporan_images/' . $laporan->image)
                 : '/images/placeholder.jpg',
-            'category'    => $laporan->category->name,
-            'location'    => $laporan->lokasi_asli,
-            'date'        => $laporan->tanggal_kejadian->format('d M Y'),
-            'time'        => $laporan->waktu_kejadian->format('H:i'),
-            'status'      => $this->formatStatus($laporan->status),
-            'author'      => $laporan->user->name ?? 'Anonim',
-            'no_telpon'   => $laporan->no_telpon,
-            'kecamatan'   => $laporan->kecamatan->name,
-            'created_at'  => $laporan->created_at,
-            'updated_at'  => $laporan->updated_at,
+            'category' => $laporan->category->name,
+            'location' => $laporan->lokasi_asli,
+            'date' => $laporan->tanggal_kejadian->format('d M Y'),
+            'time' => $laporan->waktu_kejadian->format('H:i'),
+            'status' => $this->formatStatus($laporan->status),
+            'author' => $laporan->user->name ?? 'Anonim',
+            'no_telpon' => $laporan->no_telpon,
+            'kecamatan' => $laporan->kecamatan->name,
+            'created_at' => $laporan->created_at,
+            'updated_at' => $laporan->updated_at,
         ];
 
         $relatedReports = Laporan::with(['category', 'user', 'kecamatan'])
             ->where('category_id', $laporan->category_id)
             ->where('id', '!=', $laporan->id)
+            ->where('is_active', true)
             ->orderBy('created_at', 'desc')
             ->limit(4)
             ->get()
             ->map(fn($l) => [
-                'id'          => $l->id,
-                'slug'        => $l->slug,
-                'title'       => $l->judul_laporan,
-                'location'    => $l->lokasi_asli,
-                'date'        => $l->tanggal_kejadian->format('d M Y'),
-                'time'        => $l->waktu_kejadian->format('H:i'),
-                'image'       => $l->image ? Storage::url('laporan_images/' . $l->image) : '/images/placeholder.jpg',
-                'status'      => $this->formatStatus($l->status),
-                'category'    => $l->category->name ?? '-',
-                'author'      => $l->user->name ?? 'Anonim',
+                'id' => $l->id,
+                'slug' => $l->slug,
+                'title' => $l->judul_laporan,
+                'location' => $l->lokasi_asli,
+                'date' => $l->tanggal_kejadian->format('d M Y'),
+                'time' => $l->waktu_kejadian->format('H:i'),
+                'image' => $l->image ? Storage::url('laporan_images/' . $l->image) : '/images/placeholder.jpg',
+                'status' => $this->formatStatus($l->status),
+                'category' => $l->category->name ?? '-',
+                'author' => $l->user->name ?? 'Anonim',
                 'description' => Str::limit($l->deskripsi, 120),
             ]);
 
@@ -204,6 +223,7 @@ class LaporanController extends Controller
                 'created_at',
                 'user_id'
             ])
+            ->where('is_active', true)
             ->orderBy('created_at', 'desc');
 
         // Filter
@@ -220,33 +240,55 @@ class LaporanController extends Controller
             $query->where('judul_laporan', 'like', '%' . $request->search . '%');
         }
 
-        $laporans = $query->get()->map(fn($lap) => [
-            'id'          => $lap->id,
-            'slug'        => $lap->slug,
-            'title'       => $lap->judul_laporan,
-            'description' => $lap->deskripsi,
-            'image'       => $lap->image
-                ? Storage::url('laporan_images/' . $lap->image)
-                : '/images/placeholder.jpg',
-            'category'    => $lap->category->name,
-            'location'    => $lap->lokasi_asli,
-            'date'        => $lap->tanggal_kejadian->format('d M Y'),
-            'time'        => $lap->waktu_kejadian->format('H:i'),
-            'status'      => $this->formatStatus($lap->status),
-            'author'      => $lap->user->name ?? 'Anonim',
-            'created_at'  => $lap->created_at,
-        ]);
+        $laporans = $query->paginate(12)->through(function ($lap) {
+            return [
+                'id' => $lap->id,
+                'slug' => $lap->slug,
+                'title' => $lap->judul_laporan,
+                'description' => $lap->deskripsi,
+                'image' => $lap->image
+                    ? Storage::url('laporan_images/' . $lap->image)
+                    : '/images/placeholder.jpg',
+                'category' => $lap->category->name,
+                'location' => $lap->lokasi_asli,
+                'date' => $lap->tanggal_kejadian->format('d M Y'),
+                'time' => $lap->waktu_kejadian->format('H:i'),
+                'status' => $this->formatStatus($lap->status),
+                'author' => $lap->user->name ?? 'Anonim',
+                'created_at' => $lap->created_at,
+            ];
+        })->appends($request->all());
 
         return Inertia::render('user/laporan/BeritaLaporan', [
-            'laporans'   => $laporans,
+            'laporans' => $laporans,
             'categories' => Category::all(['id', 'name']),
             'kecamatans' => Kecamatan::all(['id', 'name']),
-            'statuses'   => [
+            'statuses' => [
                 ['value' => 'belum_diproses', 'label' => 'Belum Diproses'],
-                ['value' => 'proses',         'label' => 'Diproses'],
-                ['value' => 'selesai',        'label' => 'Selesai'],
+                ['value' => 'proses', 'label' => 'Diproses'],
+                ['value' => 'selesai', 'label' => 'Selesai'],
             ],
             'filters' => $request->only(['search', 'category', 'status', 'kecamatan']),
+        ]);
+    }
+
+    public function testimonials($laporans, $stats)
+    {
+        $testimonials = Message::with('kecamatan')
+            ->latest()
+            ->limit(3)
+            ->get()
+            ->map(fn($msg) => [
+                'name' => $msg->nama_lengkap,
+                'role' => 'Warga ' . $msg->kecamatan->name,
+                'feedback' => $msg->deskripsi,
+                'image' => 'https://ui-avatars.com/api/?name=' . urlencode($msg->nama_lengkap) . '&background=3b82f6&color=fff',
+            ]);
+
+        return inertia('user/home/LandingPage', [
+            'laporans' => $laporans,
+            'stats' => $stats,
+            'testimonials' => $testimonials,
         ]);
     }
 

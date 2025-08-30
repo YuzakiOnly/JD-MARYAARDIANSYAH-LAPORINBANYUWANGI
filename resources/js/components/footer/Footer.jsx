@@ -147,8 +147,7 @@ const Footer = () => {
                 </div>
 
                 <div className="mt-12 border-t border-gray-700 pt-6 text-center text-sm text-neutral-500">
-                    © {new Date().getFullYear()} Laporin! Banyuwangi. Semua Hak
-                    Dilindungi.
+                    © {new Date().getFullYear()} Laporin! Banyuwangi (DEMO). Semua Hak Dilindungi.
                 </div>
             </div>
         </footer>

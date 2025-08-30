@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class LaporansTable
@@ -66,6 +67,14 @@ class LaporansTable
                     ->sortable()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: false),
+                ToggleColumn::make('is_active')
+                    ->label('Tampil di Berita')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->onIcon('heroicon-m-eye')
+                    ->offIcon('heroicon-m-eye-slash')
+                    ->onColor('success')
+                    ->offColor('gray'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

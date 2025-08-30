@@ -31,7 +31,7 @@ const StepSection = () => {
 
     return (
         <div className="w-full bg-gray-50">
-            <div className="py-16 px-4 md:px-8 lg:px-20">
+            <div className="py-40 px-4 md:px-8 lg:px-20">
                 <div className="text-center mb-12 lg:mb-16">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
                         Cara Melapor!

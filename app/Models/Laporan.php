@@ -20,12 +20,14 @@ class Laporan extends Model
         "waktu_kejadian",
         "image",
         "status",
-        "user_id"
+        "user_id",
+        'is_active'
     ];
 
     protected $casts = [
         "tanggal_kejadian" => "date",
-        "waktu_kejadian"   => "datetime:H:i"
+        "waktu_kejadian"   => "datetime:H:i",
+        'is_active' => 'boolean'
     ];
 
     protected static function booted()
