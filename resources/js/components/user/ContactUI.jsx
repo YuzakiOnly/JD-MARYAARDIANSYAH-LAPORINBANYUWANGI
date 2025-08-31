@@ -94,7 +94,7 @@ export function ContactUI({ kecamatans = [], auth }) {
                             <div>
                                 <h3 className="font-semibold">Kantor Pusat</h3>
                                 <p className="text-sm text-slate-600">
-                                    Jalan Cempaka Wangi No 22 <br /> Jakarta - Indonesia
+                                    Jalan Ahmad Yani <br /> Banyuwangi - Indonesia
                                 </p>
                             </div>
                         </div>
