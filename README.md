@@ -117,6 +117,7 @@ php artisan key:generate
 ```bash
 GOOGLE_CLIENT_ID=xxxxxxxxxxxx
 GOOGLE_CLIENT_SECRET=xxxxxxxxxxxx
+GOOGLE_REDIRECT_URI=http://localhost:8000/auth-google-callback
 ```
 
 7. Konfigurasikan database di file .env, lalu jalankan migrasi:
@@ -142,6 +143,66 @@ php artisan serve
 ```bash
 npm run dev 
 ```
+---
+
+### 🔧 Tambahan Inertia + ShadCN + Socialite
+
+| Langkah        | Perintah singkat                                             |
+|----------------|--------------------------------------------------------------|
+| Inertia server | `composer require inertiajs/inertia-laravel && php artisan inertia:middleware` |
+| Inertia client | `npm install @inertiajs/react`                 |
+| ShadCN init    | `npx shadcn-ui@latest init`                                  |
+| Socialite      | `composer require laravel/socialite`                         |
+
+---
+### 📘 Cara Buat Google OAuth Client ID & Secret  
+(untuk Login dengan Google di Laravel)
+=====================================
+
+###  1 Buka Google Cloud Console
+1. Masuk ke [console.cloud.google.com](https://console.cloud.google.com) dengan akun Google kamu.  
+2. Di pojok kiri-atas, klik **Select a project ▼ → NEW PROJECT**.  
+3. Beri nama: `laporin-app` → **CREATE**.
+
+==================================
+
+### 2 Konfigurasi OAuth Consent Screen
+1. **APIs & Services → OAuth consent screen**.  
+2. Pilih **External** → **CREATE**.  
+3. Isi minimal:
+   - **App name** : `laporin-app`  
+   - **User support email** : email kamu  
+   - **Developer contact info** : email kamu  
+4. Klik **SAVE AND CONTINUE** → **ADD OR REMOVE SCOPES** (bisa langsung **SAVE AND CONTINUE** lagi).  
+5. Di bagian **Test users**, tambahkan email kamu kalau ingin coba login → **SAVE AND CONTINUE**.
+
+=============
+
+### 4️⃣  Buat OAuth 2.0 Client ID & Secret
+1. **APIs & Services → Credentials → CREATE CREDENTIALS → OAuth client ID**.  
+2. **Application type**: pilih **Web application**.  
+3. **Name**: `Laporin Web Client`.  
+4. **Authorized redirect URIs** → **ADD URI**:
+   ```
+   http://localhost:8000/auth-google-callback        # lokal
+   https://yourdomain.com-auth-google-callback       # misal kalau deploy 
+   ```
+5. Klik **CREATE**.  
+6. **Copy** Client ID dan Client Secret yang muncul.
+
+=================
+
+### 5️⃣  Masukkan ke `.env`
+```bash
+GOOGLE_CLIENT_ID=isi-client-id-kamu
+GOOGLE_CLIENT_SECRET=isi-client-secret-kamu
+GOOGLE_REDIRECT_URI=http://localhost:8000/auth-google-callback
+```
+
+===============
+
+### 6️⃣  Selesai  
+Jalankan ulang `php artisan serve` → login Google sudah bisa dipakai.
 
 ---
 
