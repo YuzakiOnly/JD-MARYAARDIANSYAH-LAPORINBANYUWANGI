@@ -60,7 +60,7 @@ class LaporanController extends Controller
         }
 
         $testimonials = Message::with('kecamatan')
-            ->whereIn('id', [1, 2, 3])   // ambil id 1-3
+            ->whereIn('id', [1, 2, 3])   
             ->get()
             ->map(fn($msg) => [
                 'id' => $msg->id,
@@ -133,7 +133,6 @@ class LaporanController extends Controller
             $validated['user_id'] = null;
         }
 
-        // Default is_active = true (hidup)
         $validated['is_active'] = true;
 
         if ($request->hasFile('image')) {
