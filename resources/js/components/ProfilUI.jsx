@@ -73,34 +73,45 @@ export const ProfilUI = ({ user, laporans, userStats, categories, statuses, filt
     const safeUserStats = userStats || { total: 0, belum_diproses: 0, diproses: 0, selesai: 0 }
     const safeCategories = categories || []
     const safeStatuses = statuses || []
-    
+
     return (
         <main className='font-outfit'>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header Profile */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-                    <div className="flex items-center gap-6">
-                        <AvatarDisplay user={safeUser} className="w-20 h-20 text-2xl" />
+                <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 mb-8">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
 
-                        <div className="flex-1">
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2">{safeUser.name || 'User'}</h1>
-                            <div className="flex flex-wrap gap-4 text-gray-600">
+                        {/* Avatar */}
+                        <AvatarDisplay user={safeUser} className="w-24 h-24 sm:w-20 sm:h-20 text-3xl sm:text-2xl" />
+
+                        {/* Info User */}
+                        <div className="flex-1 text-center sm:text-left">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{safeUser.name || 'User'}</h1>
+                            <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-gray-600">
+
+                                {/* Email */}
                                 <div className="flex items-center gap-2">
                                     <MdEmail className="w-4 h-4" />
                                     <span>{safeUser.email || 'Email tidak tersedia'}</span>
                                 </div>
+
+                                {/* Role */}
                                 <div className="flex items-center gap-2">
                                     <MdPerson className="w-4 h-4" />
                                     <span className="capitalize">{safeUser.role || 'user'}</span>
                                 </div>
+
+                                {/* Created At */}
                                 <div className="flex items-center gap-2">
                                     <MdCalendarToday className="w-4 h-4" />
                                     <span>Bergabung {safeUser.created_at || 'Tanggal tidak tersedia'}</span>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

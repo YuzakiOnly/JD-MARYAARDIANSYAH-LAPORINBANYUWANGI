@@ -90,18 +90,6 @@ export const Navbar = () => {
                                 <DropdownMenuContent className="w-auto" align="end">
                                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem>
-                                            <span className="font-medium">Name:</span>&nbsp;{user.name}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <span className="font-medium">Email:</span>&nbsp;{user.email}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <span className="font-medium">Role:</span>&nbsp;{user.role}
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                    <DropdownMenuSeparator />
                                     
                                     {/* Link ke Profil */}
                                     <DropdownMenuItem asChild>
