@@ -291,6 +291,84 @@ class LaporanController extends Controller
         ]);
     }
 
+
+    public function profil(Request $request)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // Query laporan milik user yang login
+        $query = Laporan::with(['category', 'kecamatan'])
+            ->where('user_id', $user->id)
+            ->where('is_active', true)
+            ->orderBy('created_at', 'desc');
+
+        // Filter berdasarkan status jika ada
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Filter berdasarkan kategori jika ada
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('category_id', $request->category);
+        }
+
+        // Search berdasarkan judul
+        if ($request->filled('search')) {
+            $query->where('judul_laporan', 'like', '%' . $request->search . '%');
+        }
+
+        $laporans = $query->paginate(9)->through(function ($laporan) {
+            return [
+                'id' => $laporan->id,
+                'slug' => $laporan->slug,
+                'title' => $laporan->judul_laporan,
+                'description' => Str::limit($laporan->deskripsi, 150),
+                'image' => $laporan->image 
+                    ? Storage::url('laporan_images/' . $laporan->image) 
+                    : '/images/placeholder.jpg',
+                'category' => $laporan->category->name,
+                'kecamatan' => $laporan->kecamatan->name,
+                'location' => $laporan->lokasi_asli,
+                'date' => $laporan->tanggal_kejadian->format('d M Y'),
+                'time' => $laporan->waktu_kejadian->format('H:i'),
+                'status' => $this->formatStatus($laporan->status),
+                'created_at' => $laporan->created_at->format('d M Y H:i'),
+            ];
+        })->appends($request->all());
+
+        // Statistik user
+        $userStats = [
+            'total' => Laporan::where('user_id', $user->id)->where('is_active', true)->count(),
+            'belum_diproses' => Laporan::where('user_id', $user->id)->where('status', 'belum_diproses')->where('is_active', true)->count(),
+            'diproses' => Laporan::where('user_id', $user->id)->where('status', 'proses')->where('is_active', true)->count(),
+            'selesai' => Laporan::where('user_id', $user->id)->where('status', 'selesai')->where('is_active', true)->count(),
+        ];
+
+        return Inertia::render('user/home/Profil', [
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'avatar' => $user->avatar,
+                'created_at' => $user->created_at->format('d M Y'),
+            ],
+            'laporans' => $laporans,
+            'userStats' => $userStats,
+            'categories' => Category::all(['id', 'name']),
+            'statuses' => [
+                ['value' => 'belum_diproses', 'label' => 'Belum Diproses'],
+                ['value' => 'proses', 'label' => 'Diproses'], 
+                ['value' => 'selesai', 'label' => 'Selesai'],
+            ],
+            'filters' => $request->only(['search', 'category', 'status']),
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

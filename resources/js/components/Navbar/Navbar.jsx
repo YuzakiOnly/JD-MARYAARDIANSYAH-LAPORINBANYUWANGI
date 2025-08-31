@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { MdOutlineAccountCircle, MdLogout, MdMenu, MdClose } from "react-icons/md";
+import { MdOutlineAccountCircle, MdLogout, MdMenu, MdClose, MdPerson } from "react-icons/md";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     DropdownMenu,
@@ -15,12 +15,12 @@ import { Inertia } from '@inertiajs/inertia';
 import AvatarDisplay from '@/components/AvatarDisplay';
 import { useState } from 'react';
 
-const isActiveLink = (currentUrl, link) => {
-    if (link === "/") return currentUrl === "/";
-    return currentUrl.startsWith(link);
-};
 
 export const Navbar = () => {
+    const isActiveLink = (currentUrl, link) => {
+        if (link === "/") return currentUrl === "/";
+        return currentUrl.startsWith(link);
+    };
     const { url, props } = usePage();
     const user = props?.auth?.user || null;
     const [isOpen, setIsOpen] = useState(false);
@@ -102,6 +102,20 @@ export const Navbar = () => {
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                     <DropdownMenuSeparator />
+                                    
+                                    {/* Link ke Profil */}
+                                    <DropdownMenuItem asChild>
+                                        <Link
+                                            href="/profil"
+                                            className="cursor-pointer focus:bg-blue-50 w-full flex items-center"
+                                        >
+                                            <span className="text-blue-600 font-medium">Profil Saya</span>
+                                            <DropdownMenuShortcut>
+                                                <MdPerson className="w-5 h-5 text-blue-600" />
+                                            </DropdownMenuShortcut>
+                                        </Link>
+                                    </DropdownMenuItem>
+
                                     <DropdownMenuItem
                                         className="cursor-pointer focus:bg-red-50"
                                         onClick={logout}
@@ -177,17 +191,31 @@ export const Navbar = () => {
                                 ))}
 
                                 {user && (
-                                    <Link
-                                        href="/laporin"
-                                        onClick={closeMenu}
-                                        className={`mt-4 px-4 py-2 font-medium text-sm text-white rounded-full transition-colors ${
-                                            url === '/laporin'
-                                                ? 'bg-gray-500 cursor-default'
-                                                : 'bg-blue-500 hover:bg-blue-600'
-                                        }`}
-                                    >
-                                        {url === '/laporin' ? 'Sedang Membuat Laporan' : 'Laporkan Sekarang'}
-                                    </Link>
+                                    <>
+                                        <Link
+                                            href="/profil"
+                                            onClick={closeMenu}
+                                            className={`py-2 px-3 font-medium transition-colors ${
+                                                url === '/profil'
+                                                    ? "text-blue-600 font-semibold"
+                                                    : "text-slate-700 hover:text-blue-600"
+                                            }`}
+                                        >
+                                            Profil Saya
+                                        </Link>
+
+                                        <Link
+                                            href="/laporin"
+                                            onClick={closeMenu}
+                                            className={`mt-4 px-4 py-2 font-medium text-sm text-white rounded-full transition-colors ${
+                                                url === '/laporin'
+                                                    ? 'bg-gray-500 cursor-default'
+                                                    : 'bg-blue-500 hover:bg-blue-600'
+                                            }`}
+                                        >
+                                            {url === '/laporin' ? 'Sedang Membuat Laporan' : 'Laporkan Sekarang'}
+                                        </Link>
+                                    </>
                                 )}
 
                                 {!user && (
@@ -219,5 +247,5 @@ export const Navbar = () => {
                 )}
             </AnimatePresence>
         </>
-    );
+    )
 };

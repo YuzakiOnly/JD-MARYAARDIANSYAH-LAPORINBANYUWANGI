@@ -23,6 +23,8 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/laporin', [LaporanController::class, 'create'])->name('laporin ');
     Route::post('/laporin', [LaporanController::class, 'store'])->name('laporin.store');
     Route::post('/contact', [MessageController::class, 'store'])->name('contact.store');
+
+    Route::get('/profil', [LaporanController::class, 'profil'])->name('profil');
 });
 
 // Auth (guest only)
