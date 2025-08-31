@@ -123,7 +123,7 @@ GOOGLE_REDIRECT_URI=http://localhost:8000/auth-google-callback
 7. Konfigurasikan database di file .env, lalu jalankan migrasi:
 
 ```bash
-php artisan migrate --seed
+php artisan migrate:fresh --seed
 ```
 
 8. Buat symbolic link untuk storage:
