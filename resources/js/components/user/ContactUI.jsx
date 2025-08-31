@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, router } from "@inertiajs/react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import {
 import Swal from "sweetalert2";
 import { contactValidator } from "@/lib/contactValidation";
 
-export const ContactUI = ({ kecamatans = [] }) => {
+export function ContactUI({ kecamatans = [], auth }) {
     const { data, setData, post, processing, reset } = useForm({
         nama_lengkap: "",
         kecamatan_id: "",
@@ -29,13 +29,17 @@ export const ContactUI = ({ kecamatans = [] }) => {
 
     const handleChange = (key, value) => {
         setData(key, value);
-        if (localErrors[key]) {
-            setLocalErrors((prev) => ({ ...prev, [key]: "" }));
-        }
+        setLocalErrors((prev) => ({ ...prev, [key]: "" }));
     };
 
     const submit = (e) => {
         e.preventDefault();
+
+        if (!auth?.user) {
+            router.visit("/login");
+            return;
+        }
+        
         const errs = contactValidator(data);
         if (Object.keys(errs).length) {
             setLocalErrors(errs);
@@ -78,50 +82,46 @@ export const ContactUI = ({ kecamatans = [] }) => {
                     <div className="space-y-6">
                         <h2 className="text-2xl font-bold text-slate-800">Hubungi Kami</h2>
                         <p className="text-slate-600">
-                            Laporkan permasalahan lingkungan di sekitar Anda. Kami siap membantu
-                            24 jam.
+                            Laporkan permasalahan lingkungan di sekitar Anda. Kami siap
+                            membantu 24 jam.
                         </p>
 
-                        <div className="space-y-4">
-                            {/* Alamat */}
-                            <div className="flex items-center gap-3">
-                                <div className="rounded-full bg-blue-600 p-4 flex items-center justify-center">
-                                    <MdLocationOn className="text-white text-2xl " />
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold">Kantor Pusat</h3>
-                                    <p className="text-sm text-slate-600">
-                                        Jalan Cempaka Wangi No 22 <br /> Jakarta - Indonesia
-                                    </p>
-                                </div>
+                        {/* Alamat */}
+                        <div className="flex items-center gap-3">
+                            <div className="rounded-full bg-blue-600 p-4 flex items-center justify-center">
+                                <MdLocationOn className="text-white text-2xl" />
                             </div>
-
-                            {/* Email */}
-                            <div className="flex items-center gap-3">
-                                <div className="rounded-full bg-blue-600 p-4 flex items-center justify-center">
-                                    <MdEmail className="text-white text-2xl" />
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold">Email Kami</h3>
-                                    <p className="text-sm text-slate-600">
-                                        support@laporin.id <br />
-                                        hello@laporin.id
-                                    </p>
-                                </div>
+                            <div>
+                                <h3 className="font-semibold">Kantor Pusat</h3>
+                                <p className="text-sm text-slate-600">
+                                    Jalan Cempaka Wangi No 22 <br /> Jakarta - Indonesia
+                                </p>
                             </div>
+                        </div>
 
-                            {/* Telepon */}
-                            <div className="flex items-center gap-3">
-                                <div className="rounded-full bg-blue-600 p-4 flex items-center justify-center">
-                                    <MdPhone className="text-white text-2xl" />
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold">Telepon Kami</h3>
-                                    <p className="text-sm text-slate-600">
-                                        Telp: +62 812-3456-7890 <br />
-                                        Fax: +62 21-2002-2013
-                                    </p>
-                                </div>
+                        {/* Email */}
+                        <div className="flex items-center gap-3">
+                            <div className="rounded-full bg-blue-600 p-4 flex items-center justify-center">
+                                <MdEmail className="text-white text-2xl" />
+                            </div>
+                            <div>
+                                <h3 className="font-semibold">Email Kami</h3>
+                                <p className="text-sm text-slate-600">
+                                    support@laporin.id <br /> hello@laporin.id
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Telepon */}
+                        <div className="flex items-center gap-3">
+                            <div className="rounded-full bg-blue-600 p-4 flex items-center justify-center">
+                                <MdPhone className="text-white text-2xl" />
+                            </div>
+                            <div>
+                                <h3 className="font-semibold">Telepon Kami</h3>
+                                <p className="text-sm text-slate-600">
+                                    Telp: +62 812-3456-7890 <br /> Fax: +62 21-2002-2013
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -148,35 +148,48 @@ export const ContactUI = ({ kecamatans = [] }) => {
                                 <Input
                                     placeholder="Nama Lengkap"
                                     value={data.nama_lengkap}
-                                    onChange={(e) => handleChange("nama_lengkap", e.target.value)}
+                                    onChange={(e) =>
+                                        handleChange("nama_lengkap", e.target.value)
+                                    }
                                 />
                                 {localErrors.nama_lengkap && (
-                                    <p className="text-red-500 text-sm">{localErrors.nama_lengkap}</p>
+                                    <p className="text-red-500 text-sm">
+                                        {localErrors.nama_lengkap}
+                                    </p>
                                 )}
                             </div>
 
                             <div>
                                 <Select
                                     value={data.kecamatan_id}
-                                    onValueChange={(value) => handleChange("kecamatan_id", value)}>
-                                    <SelectTrigger
-                                    className="w-full">
+                                    onValueChange={(value) =>
+                                        handleChange("kecamatan_id", value)
+                                    }
+                                >
+                                    <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Pilih Kecamatan" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {kecamatans.length ? (
                                             kecamatans.map((kec) => (
-                                                <SelectItem key={kec.id} value={kec.id.toString()}>
+                                                <SelectItem
+                                                    key={kec.id}
+                                                    value={kec.id.toString()}
+                                                >
                                                     {kec.name}
                                                 </SelectItem>
                                             ))
                                         ) : (
-                                            <SelectItem disabled>Tidak ada data kecamatan</SelectItem>
+                                            <SelectItem disabled>
+                                                Tidak ada data kecamatan
+                                            </SelectItem>
                                         )}
                                     </SelectContent>
                                 </Select>
                                 {localErrors.kecamatan_id && (
-                                    <p className="text-red-500 text-sm">{localErrors.kecamatan_id}</p>
+                                    <p className="text-red-500 text-sm">
+                                        {localErrors.kecamatan_id}
+                                    </p>
                                 )}
                             </div>
 
@@ -184,10 +197,14 @@ export const ContactUI = ({ kecamatans = [] }) => {
                                 <Input
                                     placeholder="Nomor Telepon"
                                     value={data.no_telpon}
-                                    onChange={(e) => handleChange("no_telpon", e.target.value)}
+                                    onChange={(e) =>
+                                        handleChange("no_telpon", e.target.value)
+                                    }
                                 />
                                 {localErrors.no_telpon && (
-                                    <p className="text-red-500 text-sm">{localErrors.no_telpon}</p>
+                                    <p className="text-red-500 text-sm">
+                                        {localErrors.no_telpon}
+                                    </p>
                                 )}
                             </div>
 
@@ -196,10 +213,14 @@ export const ContactUI = ({ kecamatans = [] }) => {
                                     type="email"
                                     placeholder="Alamat Email"
                                     value={data.alamat_email}
-                                    onChange={(e) => handleChange("alamat_email", e.target.value)}
+                                    onChange={(e) =>
+                                        handleChange("alamat_email", e.target.value)
+                                    }
                                 />
                                 {localErrors.alamat_email && (
-                                    <p className="text-red-500 text-sm">{localErrors.alamat_email}</p>
+                                    <p className="text-red-500 text-sm">
+                                        {localErrors.alamat_email}
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -225,5 +246,5 @@ export const ContactUI = ({ kecamatans = [] }) => {
                 </div>
             </div>
         </form>
-    )
+    );
 }

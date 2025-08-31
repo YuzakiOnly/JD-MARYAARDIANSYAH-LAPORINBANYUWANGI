@@ -1,11 +1,11 @@
-import { ContactUI } from '@/components/user/ContactUi'
+import { ContactUI } from '@/components/user/ContactUI'
 import { MainLayout } from '@/pages/layouts/MainLayout'
 import { Card, CardContent } from "@/components/ui/card";
 import { BannerUI, Map } from "@/components/BannerUI";
 import { motion } from "framer-motion";
 import React from 'react'
 
-const ContactUs = ({ kecamatans }) => {
+const ContactUs = ({ kecamatans, auth }) => {
     return (
         <div className="w-full">
             <BannerUI
@@ -21,7 +21,7 @@ const ContactUs = ({ kecamatans }) => {
                 className="max-w-6xl mx-auto px-4 -mt-24 relative z-10">
                 <Card className="shadow-lg rounded-2xl overflow-hidden">
                     <CardContent className="p-0">
-                        <ContactUI kecamatans={kecamatans}/>
+                        <ContactUI kecamatans={kecamatans} auth={auth}/>
                     </CardContent>
                 </Card>
             </motion.div>
